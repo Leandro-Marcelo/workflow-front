@@ -1,50 +1,43 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 const TeamLists = () => {
+    const navigate = useNavigate();
+    const goBack = () => {
+        navigate(-1);
+    };
     return (
-        <div className="w-full h-screen text-white px-4 py-4 bg-[#000] ">
-            <div className="flex justify-between px-2 py-2 ">
-                <div className="flex ">
-                    <p className="mr-2  bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Board
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Challenge 1 - ONE
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        estrella
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Leandro Marcelo's workspace
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        private
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        LM
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Invite
-                    </p>
-                </div>
-                <div className="flex">
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Power-Ups
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Automation
-                    </p>
-                    <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                        Filter
-                    </p>
-                    <p className=" bg-white/30 hover:bg-white/40 px-2 py-1">
-                        ... Show menu
-                    </p>
-                </div>
+        /* 92.7vh */
+        <div className="h-[92.7vh] text-white px-4 py-4 bg-[#000]">
+            <div className="flex ">
+                <p
+                    className="mr-2  bg-white/30 hover:bg-white/40 px-2 py-1"
+                    onClick={goBack}
+                >
+                    Volver a Equipos
+                </p>
+                <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
+                    Challenge 1 - ONE
+                </p>
+                <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
+                    Mostrar Miembros
+                </p>
+                <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
+                    Agregar Miembros
+                </p>
             </div>
-            {/* bg-[green] */}
-            <div className="flex w-full h-[95%] justify-start  overflow-x-auto ">
-                <div className="w-[272px] mx-2 shrink-0"></div>
+            {/* 94% */}
+            <div className="flex w-full h-[94%] justify-start  overflow-x-auto ">
+                <div className="w-[272px] bg-transparent mx-2 shrink-0">
+                    treello list
+                </div>
+                <div className="w-[272px] bg-transparent mx-2 shrink-0">
+                    treello list
+                </div>
+                <div className="w-[272px] bg-transparent mx-2 shrink-0">
+                    treello list
+                </div>
+                <div className="w-[272px] mx-2 shrink-0">add list</div>
             </div>
         </div>
     );

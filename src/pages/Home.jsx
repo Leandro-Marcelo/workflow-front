@@ -17,8 +17,11 @@ import TableTeam from "../components/Home/TableTeam";
 import ModalDelete from "../components/utilities/ModalDelete";
 
 import Providers from "../components/SignUp/Providers";
+import { useParams } from "react-router-dom";
 
 const Home = () => {
+    const params = useParams();
+    console.log(params);
     const state = useSelector((state) => state);
     const dispatch = useDispatch();
     const { teams } = state.team;
@@ -82,35 +85,32 @@ const Home = () => {
         });
     };
     return (
-        <div className="w-full">
-            <AppBarResponsive />
-            <Container sx={{ marginY: 5 }}>
-                <div className="flex justify-between mb-4">
-                    <p className="text-2xl font-semibold md:text-4xl">
-                        My Workspace
-                    </p>
-                    <Modal
-                        createData={createData}
-                        /*  updateData={updateData}
+        <Container sx={{ marginY: 5 }}>
+            <div className="flex justify-between mb-4">
+                <p className="text-2xl font-semibold md:text-4xl">
+                    My Workspace
+                </p>
+                <Modal
+                    createData={createData}
+                    /*  updateData={updateData}
                         dataToEdit={dataToEdit}
                         setDataToEdit={setDataToEdit} */
-                    />
-                </div>
+                />
+            </div>
 
-                {loading && (
-                    <div className="center">
-                        <Progress />
-                    </div>
-                )}
-                {teams && (
-                    <TableTeam
-                        teams={teams}
-                        /* setDataToEdit={setDataToEdit} */
-                        deleteTeam={deleteTeam}
-                    />
-                )}
-            </Container>
-        </div>
+            {loading && (
+                <div className="center">
+                    <Progress />
+                </div>
+            )}
+            {teams && (
+                <TableTeam
+                    teams={teams}
+                    /* setDataToEdit={setDataToEdit} */
+                    deleteTeam={deleteTeam}
+                />
+            )}
+        </Container>
     );
 };
 
