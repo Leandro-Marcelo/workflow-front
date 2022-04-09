@@ -10,51 +10,31 @@ import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Providers from "../components/SignUp/Providers";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link } from "react-router-dom";
-import { useEffect, useState } from "react";
-import { aPost } from "../axios";
+import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { loginAction } from "../actions/sessionActions";
-
-function Copyright(props) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <LinkMUI color="inherit" href="https://mui.com/">
-                Your Website
-            </LinkMUI>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
-
-const theme = createTheme();
+import { login } from "../features/auth/authSlice";
+import { Alert, CircularProgress } from "@mui/material";
 
 export default function SignInSide() {
-    const session = useSelector((state) => state.session);
+    const theme = createTheme();
+    const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
-    /* useEffect(() => {
-        if (user.logged) {
-            navigate("/");
-        }
-    }, [user]); */
 
     const initialState = {
         email: "",
         password: "",
     };
 
+    /* useEffect(() => {
+        if (user.logged) {
+            navigate("/");
+        }
+    }, [user]); */
+
     const [credentials, setCredentials] = useState(initialState);
+
     const handleSubmit = () => {
-        aPost("/auth/login", credentials).then((res) => {
-            console.log(res.data);
-            dispatch(loginAction(res.data));
-        });
+        dispatch(login(credentials));
     };
 
     const handleChange = (e) => {
@@ -151,14 +131,25 @@ export default function SignInSide() {
                                 value={credentials.password}
                                 onChange={handleChange}
                             />
-
+                            {auth.loginError ? (
+                                <Alert severity="error">
+                                    {auth.loginError}
+                                </Alert>
+                            ) : null}
                             <Button
                                 onClick={handleSubmit}
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                Login
+                                {auth.loginStatus === "pending" ? (
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={30}
+                                    />
+                                ) : (
+                                    "Login"
+                                )}
                             </Button>
                             <Providers />
                             <Typography
@@ -173,8 +164,6 @@ export default function SignInSide() {
                                     Dont have an account? Sign Up
                                 </Link>
                             </Typography>
-
-                            <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>
                 </Grid>

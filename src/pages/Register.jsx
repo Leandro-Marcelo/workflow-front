@@ -1,7 +1,6 @@
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import LinkMUI from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
@@ -11,30 +10,13 @@ import Providers from "../components/SignUp/Providers";
 import { Link } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useState } from "react";
-import { useDispatch } from "react-redux";
-import { signUpAction } from "../actions/sessionActions";
-import { aPost } from "../axios";
-
-function Copyright(props) {
-    return (
-        <Typography
-            variant="body2"
-            color="text.secondary"
-            align="center"
-            {...props}
-        >
-            {"Copyright © "}
-            <LinkMUI color="inherit" href="https://mui.com/">
-                Your Website
-            </LinkMUI>{" "}
-            {new Date().getFullYear()}
-            {"."}
-        </Typography>
-    );
-}
+import { useDispatch, useSelector } from "react-redux";
+import { Alert, CircularProgress } from "@mui/material";
+import { signUp } from "../features/auth/authSlice";
 
 export default function SignInSide() {
     const theme = createTheme();
+    const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     /* Otra forma de registrarse sería hacer todo en el evento sign in / submit, es decir, agarrar recien los datos ya que probablemente son los finales y crearlo, pero la ventaja de que esten controlados es que puedo hacer validaciones */
     const initialState = {
@@ -53,9 +35,7 @@ export default function SignInSide() {
         user.append("password", credentials.password);
         user.append("img", credentials.img);
 
-        aPost("/auth/signup", user).then((res) => {
-            dispatch(signUpAction(res.data));
-        });
+        dispatch(signUp(user));
 
         //redireccionarlo
         //handleClose();
@@ -178,14 +158,25 @@ export default function SignInSide() {
                                     <AddIcon /> Subir Imagen
                                 </label>
                             </Button>
-
+                            {auth.signUpError ? (
+                                <Alert severity="error">
+                                    {auth.signUpError}
+                                </Alert>
+                            ) : null}
                             <Button
                                 fullWidth
                                 variant="contained"
                                 sx={{ mt: 3, mb: 1 }}
                                 onClick={handleSubmit}
                             >
-                                Sign In
+                                {auth.signUpStatus === "pending" ? (
+                                    <CircularProgress
+                                        color="inherit"
+                                        size={30}
+                                    />
+                                ) : (
+                                    "Sign Up"
+                                )}
                             </Button>
                             <Providers />
                             <Typography
@@ -200,7 +191,6 @@ export default function SignInSide() {
                                     Already have an account Login Now
                                 </Link>
                             </Typography>
-                            <Copyright sx={{ mt: 5 }} />
                         </Box>
                     </Box>
                 </Grid>

@@ -1,8 +1,8 @@
 import React from "react";
 import { Outlet } from "react-router-dom";
-import AppBarResponsive from "../components/Home/AppBarResponsive";
+import AppBarResponsive from "../components/NavBar/AppBarResponsive";
 
-const Nav = () => {
+const NavBar = () => {
     return (
         <div className="w-full h-screen">
             <AppBarResponsive />
@@ -11,4 +11,4 @@ const Nav = () => {
     );
 };
 
-export default Nav;
+export default NavBar;

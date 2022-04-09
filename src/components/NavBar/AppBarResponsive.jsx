@@ -13,9 +13,10 @@ import Tooltip from "@mui/material/Tooltip";
 import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
-import ImageAvatar from "./ImageAvatar";
+import ImageAvatar from "../Teams/ImageAvatar";
 import { aPost } from "../../axios";
-import { logoutAction } from "../../actions/sessionActions";
+import { CircularProgress } from "@mui/material";
+import { logout } from "../../features/auth/authSlice";
 
 /* como Sign Up esta separado, en el params de la url pone un % */
 const pages = ["Login", "Sign Up", "Proyectos", "Equipos"];
@@ -23,7 +24,7 @@ const pages = ["Login", "Sign Up", "Proyectos", "Equipos"];
 const settings = ["Profile", "Account", "Dashboard"];
 
 const ResponsiveAppBar = () => {
-    const session = useSelector((state) => state.session);
+    const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const [anchorElNav, setAnchorElNav] = React.useState(null);
     const [anchorElUser, setAnchorElUser] = React.useState(null);
@@ -43,15 +44,12 @@ const ResponsiveAppBar = () => {
         setAnchorElUser(null);
     };
 
-    const logout = () => {
-        aPost("/auth/logout").then((res) => {
-            dispatch(logoutAction(res.data));
-            setAnchorElUser(null);
-        });
+    const logoutUser = () => {
+        dispatch(logout());
     };
 
     return (
-        <AppBar position="static">
+        <AppBar sx={{ position: { xs: "sticky", md: "static" } }}>
             <Container maxWidth="xl">
                 <Toolbar disableGutters>
                     {/* Logo Left*/}
@@ -159,10 +157,14 @@ const ResponsiveAppBar = () => {
                                    
                                     src={"../../assets/img/1.jpeg"}
                                 /> */}
-                                <ImageAvatar
-                                    img={session.img}
-                                    name={session.name}
-                                />
+                                {auth.user ? (
+                                    <ImageAvatar
+                                        img={auth.user?.img}
+                                        name={auth.user?.name}
+                                    />
+                                ) : (
+                                    <CircularProgress color="inherit" />
+                                )}
                             </IconButton>
                         </Tooltip>
                         <Menu
@@ -196,7 +198,7 @@ const ResponsiveAppBar = () => {
                                     </MenuItem>
                                 </Link>
                             ))}
-                            <MenuItem onClick={logout}>
+                            <MenuItem onClick={logoutUser}>
                                 <Typography
                                     textAlign="center"
                                     color={"#0000EE"}

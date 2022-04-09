@@ -1,43 +1,32 @@
-import { BrowserRouter, Routes, Route, Router } from "react-router-dom";
+import { BrowserRouter, Routes, Route } from "react-router-dom";
 import { useSelector, useDispatch } from "react-redux";
 /* import Login from "./pages/Login"; */
 import { useEffect } from "react";
-import Home from "./pages/Home";
+import Teams from "./pages/Teams";
 import Login from "./pages/Login";
 import SignUp from "./pages/Register";
-import { aPost } from "./axios";
-import { validateAction } from "./actions/sessionActions";
-import NotFound from "./pages/NotFound";
-import TeamLists from "./pages/TeamLists";
-import Nav from "./pages/Nav";
-import AppBarResponsive from "./components/Home/AppBarResponsive";
-import Projects from "./pages/Projects";
+import Team from "./pages/Team";
+import NavBar from "./pages/NavBar";
 import Casa from "./pages/Casa";
-import Project from "./pages/Project";
 import Casa2 from "./pages/Casa2";
+import { validate } from "./features/auth/authSlice";
 
 function App() {
+    const auth = useSelector((state) => state.auth);
+    console.log(`auth:`);
+    console.log(auth);
     const dispatch = useDispatch();
     useEffect(() => {
-        console.log(`session:`, session);
-        aPost("/auth/validate").then((res) => {
-            dispatch(validateAction(res.data));
-        });
+        dispatch(validate());
     }, []);
 
-    const session = useSelector((state) => state.session);
-    console.log(`session222:`, session);
     return (
         <BrowserRouter>
             {/* las rutas deben ir en español porque es lo que va a ver el usuario o igual debería ir en inglés? */}
             <Routes>
-                <Route path="/*" element={<Nav />}>
-                    <Route path="proyectos" element={<Projects />} />
-                    <Route path="proyectos/:proyecto" element={<Home />} />
-                    <Route
-                        path="proyectos/:proyecto/equipos/:equipo"
-                        element={<TeamLists />}
-                    />
+                <Route path="/*" element={<NavBar />}>
+                    <Route path="teams" element={<Teams />} />
+                    <Route path="teams/:idTeam" element={<Team />} />
                 </Route>
                 <Route path="signup" element={<SignUp />} />
                 <Route path="login" element={<Login />} />

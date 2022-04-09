@@ -4,6 +4,7 @@ import { Link } from "react-router-dom";
 import Team from "./Team";
 
 const TableTeam = ({ teams, deleteTeam }) => {
+    console.log(`que esta llegando`, teams);
     const noTeams = {
         name: "Crea un equipo",
         img: null,

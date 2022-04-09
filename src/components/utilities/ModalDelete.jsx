@@ -25,7 +25,9 @@ export default function TransitionsModal({ deleteTeam, idTeam }) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+
     const teamEliminated = () => {
+        console.log(`me ejecuto`);
         deleteTeam(idTeam);
         setOpen(false);
     };

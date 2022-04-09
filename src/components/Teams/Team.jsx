@@ -15,7 +15,7 @@ export default function MediaCard({ team, deleteTeam }) {
     return (
         <Grid item lg={4} md={4} sm={6} xs={12}>
             <Card>
-                <Link to={"/team/" + team._id}>
+                <Link to={"/teams/" + team._id}>
                     <CardMedia
                         component="img"
                         image={
@@ -48,7 +48,7 @@ export default function MediaCard({ team, deleteTeam }) {
 
                 <Box className="flex justify-around pb-4">
                     <ModalDelete deleteTeam={deleteTeam} idTeam={team._id} />
-                    <ModalDelete />
+                    {/* <ModalDelete /> */}
                 </Box>
             </Card>
         </Grid>
