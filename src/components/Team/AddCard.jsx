@@ -4,7 +4,10 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons"; */
 import CloseIcon from "@mui/icons-material/Close";
 
 import AddIcon from "@mui/icons-material/Add";
+import { useDispatch } from "react-redux";
+import { addTask } from "../../features/team/teamSlice";
 const AddCard = ({ idList }) => {
+    const dispatch = useDispatch();
     const spanInput = useRef();
     const handleSpanInput = () => {
         console.log(`active`);
@@ -15,6 +18,7 @@ const AddCard = ({ idList }) => {
             return;
         }
         console.log(`este valor tengo`, spanInput.current.textContent);
+        dispatch(addTask({ idList, name: spanInput.current.textContent }));
         /*    addCard(spanInput.current.textContent, id); */
         setOpen(true);
     };

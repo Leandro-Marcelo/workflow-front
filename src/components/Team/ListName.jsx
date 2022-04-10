@@ -1,8 +1,14 @@
 import React, { useState } from "react";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
+import { useParams } from "react-router-dom";
+import { useDispatch, useSelector } from "react-redux";
+import { updateListName } from "../../features/team/teamSlice";
+import PanToolIcon from "@mui/icons-material/PanTool";
 /* el id es para editar el titúlo de la lista */
 const ListName = ({ name, idList }) => {
     /* const { updateListTitle } = useContext(APIContext); */
+    const team = useSelector((state) => state.team);
+    const dispatch = useDispatch();
 
     const initailForm = {
         name: name,
@@ -18,8 +24,10 @@ const ListName = ({ name, idList }) => {
         });
     };
 
+    /* handleBlur y enter */
     const handleBlur = () => {
-        /* updateListTitle(listTitle.title, id); */
+        console.log(listName.name);
+        dispatch(updateListName({ idList, name: listName.name }));
     };
 
     return (
@@ -28,6 +36,7 @@ const ListName = ({ name, idList }) => {
             <input
                 type="text"
                 name="name"
+                /* este name es el que viene de la DB */
                 value={listName.name}
                 onChange={handleChange}
                 onBlur={handleBlur}
@@ -36,7 +45,7 @@ const ListName = ({ name, idList }) => {
             />
             <div className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] ">
                 {/* el padding de 1 es para achicarlo xd */}
-                <MoreHorizIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
+                <PanToolIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
             </div>
         </div>
     );

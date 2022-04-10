@@ -3,11 +3,12 @@ import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { aPost } from "../../axios";
 import { useDispatch } from "react-redux";
+import { addList } from "../../features/team/teamSlice";
 
 const AddList = ({ idTeam }) => {
     const initailForm = {
-        listName: "",
-        listDescription: "",
+        name: "",
+        description: "",
     };
 
     const dispatch = useDispatch();
@@ -21,10 +22,8 @@ const AddList = ({ idTeam }) => {
         });
     };
 
-    const addList = () => {
-        aPost(`/teams/${idTeam}/addList`, newList).then((res) => {
-            dispatch();
-        });
+    const createList = () => {
+        dispatch(addList({ idTeam, newList }));
         setNewList(initailForm);
         setOpen(true);
     };
@@ -52,19 +51,19 @@ const AddList = ({ idTeam }) => {
                 <div className=" bg-[#ebecf0] rounded-[3px] w-[272px] h-[80px] p-1">
                     <input
                         type="text"
-                        name="listName"
-                        id="listName"
+                        name="name"
+                        id="name"
                         onBlur={null}
                         placeholder={"Enter list title..."}
                         className="w-[264px] h-[36px] cursor-pointer rounded-[3px]  bg-[white] border-2 px-3 py-2 border-[#0079bf] outline-none text-[#172b4d] mb-1"
-                        value={newList.listName}
+                        value={newList.name}
                         onChange={handleChange}
                         autoFocus
                     />
                     <div className="flex w-full items-center">
                         <button
                             className="hover:bg-[#026aa7] bg-[#0079bf] text-white h-8 w-20 rounded-[3px]"
-                            onClick={addList}
+                            onClick={createList}
                         >
                             Add list
                         </button>
