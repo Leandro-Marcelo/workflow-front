@@ -5,28 +5,26 @@ const ListTask = ({ task, index }) => {
     return (
         /* no nos deja crear una tarjeta sin nombre */
         <div className="">
-            {task && (
-                <Draggable
-                    // key y draggableId el id de la tarea
-                    key={task._id}
-                    draggableId={String(task._id)}
-                    //quizas solo tiene que ser numero
-                    index={index}
-                >
-                    {(provided, snapshot) => (
-                        <div
-                            /* className=" bg-red-800" */
-                            ref={provided.innerRef}
-                            {...provided.draggableProps}
-                            {...provided.dragHandleProps}
-                        >
-                            <div className="bg-white mb-2 rounded-[3px] mx-2 py-1 px-2">
-                                {task.name}
-                            </div>
-                        </div> //Task Item
-                    )}
-                </Draggable>
-            )}
+            <Draggable
+                // key y draggableId el id de la tarea
+                key={task._id}
+                draggableId={"task-" + String(task._id)}
+                //quizas solo tiene que ser numero
+                index={index}
+            >
+                {(provided, snapshot) => (
+                    <div
+                        /* className=" bg-red-800" */
+                        ref={provided.innerRef}
+                        {...provided.draggableProps}
+                        {...provided.dragHandleProps}
+                    >
+                        <div className="bg-white mb-2 rounded-[3px] mx-2 py-1 px-2">
+                            {task.name}
+                        </div>
+                    </div> //Task Item
+                )}
+            </Draggable>
         </div>
     );
 };

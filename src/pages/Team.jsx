@@ -4,7 +4,7 @@ import AddList from "../components/Team/AddList";
 import { useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import { getTeam, updateList } from "../features/team/teamSlice";
-import { DragDropContext } from "react-beautiful-dnd";
+import { DragDropContext, Droppable } from "react-beautiful-dnd";
 
 const Team = () => {
     const team = useSelector((state) => state.team);
@@ -128,27 +128,46 @@ const Team = () => {
             </div>
             {/* para el 90% en iphone va perfecto */}
             {/* 97% */}
-            <div className="flex w-full  h-[90%] lg:h-[95%] justify-start overflow-x-auto mt-4 ">
+            {/* h-[90%] lg:h-[95%]  */}
+            {/* LISTS AND ADD LIST */}
+            <div className="flex w-full  justify-start overflow-x-auto mt-4 ">
                 {team ? (
                     <DragDropContext onDragEnd={onDragEnd} className="">
-                        {team.lists.map((list) => {
-                            return (
-                                //ojito, hay darle la key al componente y no siempre al coso ese <TrelloList/>
+                        <Droppable
+                            droppableId="all-columns"
+                            direction="horizontal"
+                            type="column"
+                        >
+                            {(provided) => (
+                                /* lists */
                                 <div
-                                    className="w-[272px] bg-transparent shrink-0 mr-4"
-                                    key={list._id}
+                                    className="flex w-full  justify-start overflow-x-auto mt-4 "
+                                    {...provided.droppableProps}
+                                    ref={provided.innerRef}
                                 >
-                                    <List list={list} />
+                                    {team.lists.map((list, index) => {
+                                        return (
+                                            //ojito, hay darle la key al componente y no siempre al coso ese <TrelloList/>
+                                            <List
+                                                list={list}
+                                                index={index}
+                                                key={list._id}
+                                            />
+                                        );
+                                    })}
+                                    {provided.placeholder}
                                 </div>
-                            );
-                        })}
+                            )}
+                        </Droppable>
                     </DragDropContext>
                 ) : (
                     //esto de si no existe la api mostrar un trello list, tiraría error porque no encontraría el Trello lists
                     <h2>No estan llegando las listas de la APIREST</h2>
                 )}
                 {team && (
-                    <div className="w-[272px] shrink-0">
+                    /* shrink-0 */
+                    /* Add list */
+                    <div className="w-[272px] ">
                         <AddList idTeam={team.team._id} />
                     </div>
                 )}
