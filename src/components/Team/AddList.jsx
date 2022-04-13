@@ -33,16 +33,18 @@ const AddList = ({ idTeam }) => {
         <div className="">
             {open ? (
                 <div
-                    /* 00000029 bg-white/30 backdrop-blur-sm*/
-                    className="flex  bg-[#00000014] hover:bg-[#00000029]   px-3 py-2 rounded-[3px] "
+                    /* flex  bg-[#00000014] hover:bg-[#00000029]   px-3 py-2 rounded-[3px] */
+                    className="flex  bg-white/30 hover:bg-white/40 px-3 py-2 rounded-[3px] "
                     onClick={() => setOpen(false)}
                 >
                     <div className="flex justify-center items-center">
                         <AddIcon
                             fontSize="small"
-                            className="text-[#172b4d] cursor-pointer "
+                            /* new color #172b9d color que estaba */
+                            className="text-white cursor-pointer "
                         />
-                        <p className="text-[#172b4d] cursor-pointer font-normal">
+                        {/* text-[#172b4d] */}
+                        <p className=" cursor-pointer font-normal text-white">
                             Add another list
                         </p>
                     </div>

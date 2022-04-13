@@ -6,6 +6,7 @@ const NavBar = () => {
     return (
         <div className="w-full h-screen">
             <AppBarResponsive />
+
             <Outlet />
         </div>
     );

@@ -18,7 +18,7 @@ const Providers = () => {
                 </div>
             </a>
 
-            <a
+            {/*  <a
                 href="http://localhost:4000/auth/github"
                 className="buttonProviders buttonProviderGithub"
             >
@@ -26,7 +26,7 @@ const Providers = () => {
                     <GitHubIcon />
                     <span className="span spanGithub">with Github</span>
                 </div>
-            </a>
+            </a> */}
         </div>
     );
 };

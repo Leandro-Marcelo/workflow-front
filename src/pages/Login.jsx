@@ -9,16 +9,24 @@ import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Providers from "../components/SignUp/Providers";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { login } from "../features/auth/authSlice";
 import { Alert, CircularProgress } from "@mui/material";
+import { useEffect } from "react";
 
 export default function SignInSide() {
     const theme = createTheme();
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    /* console.log(auth.logged); */
+
+    useEffect(() => {
+        console.log(`se imprime?`, auth.logged);
+        if (auth.logged) navigate("/teams");
+    }, [auth]);
 
     const initialState = {
         email: "",

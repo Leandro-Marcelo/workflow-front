@@ -19,9 +19,10 @@ import { CircularProgress } from "@mui/material";
 import { logout } from "../../features/auth/authSlice";
 
 /* como Sign Up esta separado, en el params de la url pone un % */
-const pages = ["Login", "Sign Up", "Proyectos", "Equipos"];
+const pages = [];
 /* more pages */
-const settings = ["Profile", "Account", "Dashboard"];
+/* "Profile", "Account", "Dashboard" */
+const settings = [];
 
 const ResponsiveAppBar = () => {
     const auth = useSelector((state) => state.auth);
@@ -59,7 +60,7 @@ const ResponsiveAppBar = () => {
                         component="div"
                         sx={{ mr: 2, display: { xs: "none", md: "flex" } }}
                     >
-                        LOGO
+                        Leandro Marcelo
                     </Typography>
                     {/* Mobile Menu with the pages */}
                     <Box
@@ -118,7 +119,7 @@ const ResponsiveAppBar = () => {
                             display: { xs: "flex", md: "none" },
                         }}
                     >
-                        LOGO
+                        Leandro Marcelo
                     </Typography>
                     {/* estos son Login, Sign Up, Workspace de desktop */}
                     <Box

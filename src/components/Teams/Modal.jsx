@@ -21,6 +21,7 @@ const style = {
     boxShadow: 24,
     p: 4,
 };
+/* absolute top-[50%] left-[50%] -translate-x-2/4 -translate-y-2/4 w-[1000px] shadow-2xl rounded-[3px] bg-[white] h-[642px] overflow-y-auto border-none outline-none */
 
 export default function TransitionsModal({ createData }) {
     const [open, setOpen] = React.useState(false);
@@ -43,12 +44,12 @@ export default function TransitionsModal({ createData }) {
                 }}
             >
                 <Fade in={open}>
-                    <Box sx={style}>
+                    <div className="absolute top-[50%] left-[50%] -translate-x-2/4 -translate-y-2/4 lg:w-[490px] md:w-[420px] w-[320px] bg-[white] shadow-2xl rounded-[3px] border-none outline-none">
                         <CreateTeam
                             createData={createData}
                             handleClose={handleClose}
                         />
-                    </Box>
+                    </div>
                 </Fade>
             </Modal>
         </div>

@@ -52,8 +52,8 @@ export default function SignInSide({ createData, handleClose }) {
                 <Grid
                     item
                     xs={12}
-                    sm={8}
-                    md={12}
+                    /*  sm={8}
+                    md={12} */
                     component={Paper}
                     elevation={6}
                     square
@@ -86,14 +86,14 @@ export default function SignInSide({ createData, handleClose }) {
                                 autoComplete="name"
                                 autoFocus
                             />
-                            <TextField
+                            {/* <TextField
                                 margin="normal"
                                 required
                                 fullWidth
                                 name="description"
                                 label="Descripción"
                                 id="description"
-                            />
+                            /> */}
                             {/* <label htmlFor="img" className="mt">
                                 <input
                                     style={{

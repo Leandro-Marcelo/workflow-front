@@ -13,8 +13,8 @@ import { validate } from "./features/auth/authSlice";
 
 function App() {
     const auth = useSelector((state) => state.auth);
-    console.log(`auth:`);
-    console.log(auth);
+    /*  console.log(`auth:`);
+    console.log(auth); */
     const dispatch = useDispatch();
     useEffect(() => {
         dispatch(validate());

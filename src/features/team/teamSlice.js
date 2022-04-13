@@ -5,6 +5,7 @@ const initialState = {
     team: [],
     members: [],
     lists: [],
+    listsOrder: [],
     /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
     getTeamStatus: "",
     getTeamError: "",
@@ -16,6 +17,8 @@ const initialState = {
     addListError: "",
     updateListNameStatus: "",
     updateListNameError: "",
+    deleteUserStatus: "",
+    deleteUserError: "",
 };
 
 /* Obtenemos todos los datos, como idLeader, members, lists, tasks, no trae los comentarios */
@@ -84,6 +87,61 @@ export const updateList = createAsyncThunk(
     }
 );
 
+/* cuando una tarea pasa a otra lista */
+export const updateLists = createAsyncThunk(
+    "team/updateLists",
+    /* necesito el idList y las tareas */
+    async (
+        { idList1, tasksUpdated, idList2, tasksUpdated2, idTask },
+        { rejectWithValue }
+    ) => {
+        console.log(idTask);
+        try {
+            /* si actualizamos el idList de la tarea antes de que los de abajo actualizen y obtengan la nueva data de las tasks, nos evitamos tener que modificar este idList en el state.lists */
+            const response3 = await aPut("/tasks/" + idTask, {
+                idList: idList2,
+            });
+            const response = await aPut("/lists/" + idList1, {
+                tasks: tasksUpdated,
+            });
+            const response2 = await aPut("/lists/" + idList2, {
+                tasks: tasksUpdated2,
+            });
+            /* su nuevo idList es ahora idList2, ya que es la lista a la cual se cambia */
+            const responseData = [
+                response.data,
+                response2.data,
+                response3.data,
+            ];
+            console.log(`que trae acá:`, responseData);
+            return responseData;
+        } catch (error) {
+            console.log(error.response.data);
+            /* mandamos como action.payload el error que nos retorna el backend */
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+export const updateListsOrder = createAsyncThunk(
+    "team/updateListsOrder",
+    /* necesito el idList y las tareas */
+    async ({ idTeam, newListsOrder }, { rejectWithValue }) => {
+        try {
+            const response = await aPut("/teams/" + idTeam, {
+                lists: newListsOrder,
+            });
+            const response2 = await aGet("/teams/" + idTeam);
+            /*    const responseData = [response.data.lists, response2.data]; */
+            console.log(response2.data);
+            return response2.data;
+        } catch (error) {
+            console.log(error.response.data);
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
 export const updateListName = createAsyncThunk(
     "team/updateListName",
     /* necesito el idList y las tareas */
@@ -97,6 +155,47 @@ export const updateListName = createAsyncThunk(
         } catch (error) {
             console.log(error.response.data);
             /* mandamos como action.payload el error que nos retorna el backend */
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+export const deleteList = createAsyncThunk(
+    "team/deleteList",
+    /* necesito el idList y las tareas */
+    async ({ idList, idTeam }, { rejectWithValue }) => {
+        try {
+            const response = await aDelete(
+                `/teams/${idTeam}/removeList/${idList}`
+            );
+            /* esto sería una limpieza hacia la base de datos, pero debo hacerlo desde el frontend o esto lo hacemos despues nosotros los backeros */
+            /* const anything = await Promise.all(
+                response.data.tasks.map((task) => {
+                    return aDelete(`/lists/${idList}/removeTask/${task._id}`);
+                })
+            ); */
+            console.log(`que trae acá:`, response.data);
+            return response.data;
+        } catch (error) {
+            console.log(error.response.data);
+
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+export const deleteTask = createAsyncThunk(
+    "team/deleteTask",
+    /* necesito el idList y las tareas */
+    async ({ idList, idTask }, { rejectWithValue }) => {
+        try {
+            const response = await aDelete(
+                `/lists/${idList}/removeTask/${idTask}`
+            );
+            console.log(`que trae acá:`, response.data);
+            return response.data;
+        } catch (error) {
+            console.log(error.response.data);
+
             return rejectWithValue(error.response?.data);
         }
     }
@@ -125,11 +224,13 @@ const teamSlice = createSlice({
             const team = { name, description, _id, img, idLeader };
             const { members } = action.payload;
             const { lists } = action.payload;
+            const listsOrder = lists.map((list) => list._id);
             return {
                 ...state,
                 team: team,
                 members: members,
                 lists: lists,
+                listsOrder,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
                 getTeamStatus: "success",
                 getTeamError: "",
@@ -186,6 +287,86 @@ const teamSlice = createSlice({
                 team: [],
                 members: [],
                 lists: [],
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "rejected",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+            };
+        },
+        [updateLists.pending]: (state, action) => {
+            return {
+                ...state,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "pending",
+                updateListError: "",
+            };
+        },
+        [updateLists.fulfilled]: (state, action) => {
+            const [list1, list2] = action.payload;
+            console.log(state.lists);
+            const updatedLists = state.lists.map((list) =>
+                list._id === list1.list._id
+                    ? list1.list
+                    : list._id === list2.list._id
+                    ? list2.list
+                    : list
+            );
+            console.log(`updateList:`, updatedLists);
+            return {
+                ...state,
+                lists: updatedLists,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "success",
+                updateListError: "",
+            };
+        },
+        [updateLists.rejected]: (state, action) => {
+            return {
+                /* no se como podría ocurrir algo así xd */
+                ...state,
+                team: [],
+                members: [],
+                lists: [],
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "rejected",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+            };
+        },
+        [updateListsOrder.pending]: (state, action) => {
+            return {
+                ...state,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "pending",
+                updateListError: "",
+            };
+        },
+        [updateListsOrder.fulfilled]: (state, action) => {
+            const lists = action.payload.lists;
+            const listsOrder = lists.map((list) => list._id);
+            return {
+                ...state,
+                lists,
+                listsOrder,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "success",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+            };
+        },
+        [updateListsOrder.rejected]: (state, action) => {
+            return {
+                /* no se como podría ocurrir algo así xd */
+                ...state,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
                 getTeamStatus: "rejected",
                 getTeamError: "",
@@ -257,12 +438,16 @@ const teamSlice = createSlice({
             };
         },
         [addList.fulfilled]: (state, action) => {
-            console.log(JSON.stringify(state.lists));
-            console.log(action.payload);
+            /* console.log(JSON.stringify(state.lists));
+            console.log(action.payload); */
+            const updatedListsOrder = [...state.listsOrder, action.payload._id];
+            /*      console.log(JSON.stringify(updatedListsOrder)); */
             const updatedList = [...state.lists, action.payload];
             return {
                 ...state,
                 lists: updatedList,
+                /* es importante tambien actualizar el listsOrder porque sino al momento de hacer el drag and drop de listas apenas crea la lista, lo que haría es que no encontraría el id de esta lista nueva en ese arreglo de listsOrder, entonces cuando lo mande actualizar en la base de datos, prácticamente la elimina porque no existe xd */
+                listsOrder: updatedListsOrder,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
                 getTeamStatus: "",
                 getTeamError: "",
@@ -329,6 +514,125 @@ const teamSlice = createSlice({
             };
         },
         [updateListName.rejected]: (state, action) => {
+            return {
+                /* no se como podría ocurrir algo así xd */
+                ...state,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "rejected",
+                updateListNameError: "",
+            };
+        },
+        [deleteList.pending]: (state, action) => {
+            return {
+                ...state,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "pending",
+                updateListNameError: "",
+            };
+        },
+        [deleteList.fulfilled]: (state, action) => {
+            console.log(`ENTRE ACÁ`);
+            const updatedLists = state.lists.filter(
+                (lista) => lista._id !== action.payload._id
+            );
+            return {
+                ...state,
+                lists: updatedLists,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                /* pone true xd */
+                updateListNameError: "",
+            };
+        },
+        [deleteList.rejected]: (state, action) => {
+            return {
+                /* no se como podría ocurrir algo así xd */
+                ...state,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "rejected",
+                updateListNameError: "",
+            };
+        },
+        [deleteTask.pending]: (state, action) => {
+            return {
+                ...state,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "pending",
+                updateListNameError: "",
+            };
+        },
+        [deleteTask.fulfilled]: (state, action) => {
+            /* console.log(action.payload.taskDeleted.idList); */
+            const filteredList = state.lists.filter(
+                (lista) => lista._id === action.payload.taskDeleted.idList
+            );
+            const updatedTasks = filteredList[0].tasks.filter(
+                (task) => task._id !== action.payload.taskDeleted._id
+            );
+            const mockup = {
+                ...filteredList[0],
+                tasks: updatedTasks,
+            };
+            /* console.log(JSON.stringify(mockup)); */
+            const updatedList = state.lists.map((list) =>
+                list._id === mockup._id ? mockup : list
+            );
+
+            return {
+                ...state,
+                lists: updatedList,
+                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameError: "",
+            };
+        },
+        [deleteTask.rejected]: (state, action) => {
             return {
                 /* no se como podría ocurrir algo así xd */
                 ...state,

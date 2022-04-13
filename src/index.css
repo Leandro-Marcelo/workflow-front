@@ -9,35 +9,22 @@
     font-family: sans-serif;
 }
 
-body {
-    background-image: url("https://images.unsplash.com/photo-1648379957883-8a6bb494de39?ixlib=rb-1.2.1&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=1974&q=80");
-    /* background-image: url(); */
-    /* background-color: black; */
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: cover;
-}
-
 a {
     text-decoration: none;
 }
 
-.title-home {
+/* .title-home {
     display: flex;
     align-items: center;
     justify-content: space-between;
     margin-bottom: 1vw;
-}
+} */
 
 .center {
     display: flex;
     justify-content: center;
     align-items: center;
 }
-
-/* .input {
-    margin-top: 1rem;
-} */
 
 .file {
     width: 100%;

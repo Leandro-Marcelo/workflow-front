@@ -7,9 +7,9 @@ import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 import Providers from "../components/SignUp/Providers";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Alert, CircularProgress } from "@mui/material";
 import { signUp } from "../features/auth/authSlice";
@@ -18,6 +18,12 @@ export default function SignInSide() {
     const theme = createTheme();
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
+    const navigate = useNavigate();
+    /* console.log(auth.logged); */
+    useEffect(() => {
+        if (auth.logged) navigate("/teams");
+    }, [auth]);
+
     /* Otra forma de registrarse sería hacer todo en el evento sign in / submit, es decir, agarrar recien los datos ya que probablemente son los finales y crearlo, pero la ventaja de que esten controlados es que puedo hacer validaciones */
     const initialState = {
         name: "",
