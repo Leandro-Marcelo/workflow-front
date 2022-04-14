@@ -1,0 +1,14 @@
+{
+  "files": {
+    "main.css": "/workflow-front/static/css/main.0afe6999.css",
+    "main.js": "/workflow-front/static/js/main.3285a5fe.js",
+    "static/media/teamImage.jpg": "/workflow-front/static/media/teamImage.036b9f610d8536e0c627.jpg",
+    "index.html": "/workflow-front/index.html",
+    "main.0afe6999.css.map": "/workflow-front/static/css/main.0afe6999.css.map",
+    "main.3285a5fe.js.map": "/workflow-front/static/js/main.3285a5fe.js.map"
+  },
+  "entrypoints": [
+    "static/css/main.0afe6999.css",
+    "static/js/main.3285a5fe.js"
+  ]
+}
