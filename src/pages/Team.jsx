@@ -19,7 +19,7 @@ const Team = () => {
     const dispatch = useDispatch();
     const params = useParams();
     useEffect(() => {
-        if (!auth.logged) navigate("/login");
+        if (auth.logged === false) navigate("/login");
     }, [auth]);
     useEffect(() => {
         dispatch(getTeam(params.idTeam));
@@ -209,7 +209,7 @@ const Team = () => {
                 <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
                     {team && team.team.name}
                 </p>
-                <Members team={team} />
+                {/* <Members team={team} /> */}
                 <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
                     {/* lo ideal sería que no se pueda volver agregar al mismo usuario */}
                     Agregar Usuario

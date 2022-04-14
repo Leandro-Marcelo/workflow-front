@@ -1,13 +1,11 @@
 import Button from "@mui/material/Button";
 import CssBaseline from "@mui/material/CssBaseline";
 import TextField from "@mui/material/TextField";
-import LinkMUI from "@mui/material/Link";
 import Paper from "@mui/material/Paper";
 import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Providers from "../components/SignUp/Providers";
 import AccountCircleIcon from "@mui/icons-material/AccountCircle";
 import { Link, useNavigate } from "react-router-dom";
 import { useState } from "react";
@@ -21,23 +19,15 @@ export default function SignInSide() {
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
-    /* console.log(auth.logged); */
 
     useEffect(() => {
-        console.log(`se imprime?`, auth.logged);
-        if (auth.logged) navigate("/teams");
+        if (auth.logged) navigate("/workflow-frontend");
     }, [auth]);
 
     const initialState = {
         email: "",
         password: "",
     };
-
-    /* useEffect(() => {
-        if (user.logged) {
-            navigate("/");
-        }
-    }, [user]); */
 
     const [credentials, setCredentials] = useState(initialState);
 
@@ -70,8 +60,7 @@ export default function SignInSide() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage:
-                            "url(https://source.unsplash.com/random)",
+                        backgroundImage: `url(https://workflow-347205.rj.r.appspot.com/files/kanban-project-management.jpg)`,
                         backgroundRepeat: "no-repeat",
                         backgroundColor: (t) =>
                             t.palette.mode === "light"
@@ -103,10 +92,6 @@ export default function SignInSide() {
                         <Typography component="h1" variant="h4">
                             Login
                         </Typography>
-                        {/*  <Typography component="h1" variant="h4">
-                            Login First
-                        </Typography> */}
-
                         <Box component="div" noValidate sx={{ mt: 1 }}>
                             <Button
                                 variant="contained"
@@ -139,9 +124,13 @@ export default function SignInSide() {
                                 value={credentials.password}
                                 onChange={handleChange}
                             />
-                            {auth.loginError ? (
-                                <Alert severity="error">
-                                    {auth.loginError}
+                            {auth.statusLogin === "rejected" ? (
+                                <Alert
+                                    severity="error"
+                                    /* absolute bottom-[48vh]  w-[300px] sm:w-[320px] */
+                                    className="absolute bottom-[48vh]  w-[300px] sm:w-[320px] "
+                                >
+                                    {auth.messageLogin}
                                 </Alert>
                             ) : null}
                             <Button
@@ -150,7 +139,7 @@ export default function SignInSide() {
                                 variant="contained"
                                 sx={{ mt: 3, mb: 2 }}
                             >
-                                {auth.loginStatus === "pending" ? (
+                                {auth.statusLogin === "pending" ? (
                                     <CircularProgress
                                         color="inherit"
                                         size={30}
@@ -159,7 +148,6 @@ export default function SignInSide() {
                                     "Login"
                                 )}
                             </Button>
-                            <Providers />
                             <Typography
                                 component="h6"
                                 variant="h6"

@@ -3,31 +3,25 @@ import { aDelete, aGet, aPost, aPut } from "../../axios";
 
 const initialState = {
     logged: false,
-    user: null,
-    /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-    loginStatus: "",
-    loginError: "",
-    signUpStatus: "",
-    signUpError: "",
-    logoutStatus: "",
-    logoutError: "",
-    validateStatus: "",
-    validateError: "",
+    user: [],
+    status: "",
+    message: "",
+    statusSignUp: "",
+    statusLogin: "",
+    messageLogin: "",
+    messageSignUp: "",
+    /* error: true, */
 };
 
 export const login = createAsyncThunk(
     "auth/login",
     async (credentials, { rejectWithValue }) => {
         try {
-            const response = await aPost("/auth/login", {
-                email: credentials.email,
-                password: credentials.password,
-            });
-            console.log(response.data);
+            const response = await aPost("/auth/login", credentials);
+            //console.log(response.data);
             return response.data;
         } catch (error) {
-            console.log(error.response.data);
-            /* mandamos como action.payload el error que nos retorna el backend */
+            //console.log(error.response.data);
             return rejectWithValue(error.response?.data);
         }
     }
@@ -38,11 +32,10 @@ export const signUp = createAsyncThunk(
     async (user, { rejectWithValue }) => {
         try {
             const response = await aPost("/auth/signup", user);
-            console.log(response.data);
+            //console.log(response.data);
             return response.data;
         } catch (error) {
-            console.log(error.response.data);
-            /* mandamos como action.payload el error que nos retorna el backend */
+            //console.log(error.response.data);
             return rejectWithValue(error.response?.data);
         }
     }
@@ -53,11 +46,11 @@ export const logout = createAsyncThunk(
     async (noData, { rejectWithValue }) => {
         try {
             const response = await aPost("/auth/logout");
-            console.log(response.data);
+            //console.log(response.data);
             return response.data;
         } catch (error) {
             /* el backend no responde con nada si es rejected, es decir, si vamos a validateee */
-            console.log(error.response.data);
+            //console.log(error.response.data);
             /* mandamos como action.payload el error que nos retorna el backend */
             return rejectWithValue(error.response?.data);
         }
@@ -69,11 +62,11 @@ export const validate = createAsyncThunk(
     async (noData, { rejectWithValue }) => {
         try {
             const response = await aPost("/auth/validate");
-            console.log(response.data);
+            //console.log(response.data);
             return response.data;
         } catch (error) {
             /* el backend no responde con nada si es rejected, es decir, si vamos a validateee */
-            console.log(error.response.data);
+            //  console.log(error.response.data);
             /* mandamos como action.payload el error que nos retorna el backend */
             return rejectWithValue(error.response?.data);
         }
@@ -88,66 +81,50 @@ const authSlice = createSlice({
         [login.pending]: (state, action) => {
             return {
                 ...state,
+                /* logged */
                 logged: false,
-                user: null,
-                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "pending",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                /* name */
+                user: [],
+                /* isFetching */
+                statusLogin: "pending",
+                /* message */
+                messageLogin: "",
             };
         },
         [login.fulfilled]: (state, action) => {
+            /* console.log(action.payload); */
             return {
                 ...state,
                 logged: action.payload.success,
                 user: action.payload.user,
-                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "success",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                /* isFetching */
+                statusLogin: "success",
+                /* message */
+                messageLogin: "",
             };
         },
         [login.rejected]: (state, action) => {
             return {
                 ...state,
-                logged: action.payload.success,
-                user: null,
+                logged: false,
+                user: [],
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "rejected",
-                loginError: action.payload.message,
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                /* isFetching */
+                statusLogin: "rejected",
+                /* message */
+                messageLogin: action.payload.message,
             };
         },
         [signUp.pending]: (state, action) => {
             return {
                 ...state,
-                /* aca debería ir false? */
                 logged: false,
-                user: null,
+                user: [],
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "pending",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                /* isFetching */
+                statusSignUp: "pending",
+                /* message */
+                messageSignUp: "",
             };
         },
         [signUp.fulfilled]: (state, action) => {
@@ -155,66 +132,49 @@ const authSlice = createSlice({
                 ...state,
                 logged: action.payload.success,
                 user: action.payload.user,
-                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "success",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+
+                /* isFetching */
+                statusSignUp: "success",
+                /* message */
+                messageSignUp: "",
             };
         },
         [signUp.rejected]: (state, action) => {
             return {
                 ...state,
-                logged: action.payload.success,
-                user: null,
+                logged: false,
+                user: [],
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "rejected",
-                signUpError: action.payload.message,
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                /* isFetching */
+                statusSignUp: "rejected",
+                /* message */
+                messageSignUp: action.payload.message,
             };
         },
 
         [logout.pending]: (state, action) => {
             return {
                 ...state,
-                /* aca debería ir false? */
-                logged: false,
-                user: null,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "pending",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                /* isFetching */
+                status: "pending",
+                /* message */
+                message: "",
             };
         },
         [logout.fulfilled]: (state, action) => {
             return {
                 ...state,
-                /* le pongo la negación porque me tirará true diciendome que el logout fue exitoso, sin embargo, yo quiero pasar ese true a false ya que es logico no? xd */
                 logged: !action.payload.success,
-                user: null,
-                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "success",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                user: [],
+                /* isFetching */
+                status: "success",
+                /* message */
+                message: "",
+                statusLogin: "",
+                statusSignUp: "",
+                messageSignUp: "",
+                messageLogin: "",
             };
         },
         [logout.rejected]: (state, action) => {
@@ -222,35 +182,26 @@ const authSlice = createSlice({
                 /* no se como podría ocurrir algo así xd */
                 ...state,
                 logged: false,
-                user: null,
-                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "rejected",
-                logoutError: "",
-                validateStatus: "",
-                validateError: "",
+                user: [],
+                /* isFetching */
+                status: "rejected",
+                /* message */
+                message: "",
             };
         },
         [validate.pending]: (state, action) => {
             return {
                 ...state,
                 logged: false,
-                user: null,
-                /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "pending",
-                validateError: "",
+                user: [],
+                /* isFetching */
+                status: "",
+                /* message */
+                message: "",
             };
         },
         [validate.fulfilled]: (state, action) => {
+            /* console.log(`que llega acá:`, action.payload); */
             // state.todos.push(action.payload);
             return {
                 ...state,
@@ -258,30 +209,22 @@ const authSlice = createSlice({
                 logged: action.payload.success,
                 user: action.payload.user,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "success",
-                validateError: "",
+                /* isFetching */
+                status: "success",
+                /* message */
+                message: "",
             };
         },
         [validate.rejected]: (state, action) => {
             return {
                 ...state,
                 logged: false,
-                user: null,
+                user: [],
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
-                loginStatus: "",
-                loginError: "",
-                signUpStatus: "",
-                signUpError: "",
-                logoutStatus: "",
-                logoutError: "",
-                validateStatus: "rejected",
-                validateError: action.payload,
+                /* isFetching */
+                status: "rejected",
+                /* message */
+                message: "",
             };
         },
     },

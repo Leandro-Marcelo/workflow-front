@@ -12,7 +12,7 @@ const TableTeam = ({ teams, deleteTeam }) => {
     return (
         <>
             <Grid container spacing={5}>
-                {teams.length > 0 ? (
+                {teams.length > 0 &&
                     teams.map((team) => (
                         <Team
                             key={team._id}
@@ -20,10 +20,7 @@ const TableTeam = ({ teams, deleteTeam }) => {
                             /* setDataToEdit={setDataToEdit} */
                             deleteTeam={deleteTeam}
                         />
-                    ))
-                ) : (
-                    <Team team={noTeams} />
-                )}
+                    ))}
             </Grid>
         </>
     );

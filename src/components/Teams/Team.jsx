@@ -1,10 +1,7 @@
 import * as React from "react";
 import Card from "@mui/material/Card";
-import CardActions from "@mui/material/CardActions";
 import CardContent from "@mui/material/CardContent";
 import CardMedia from "@mui/material/CardMedia";
-import Button from "@mui/material/Button";
-import DeleteButton from "./DeleteButton";
 import Typography from "@mui/material/Typography";
 import Default from "../../assets/img/teamImage.jpg";
 import ModalDelete from "../utilities/ModalDelete";
@@ -12,6 +9,7 @@ import { Box, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function MediaCard({ team, deleteTeam }) {
+    const PF = process.env.APIREST;
     return (
         <Grid item lg={4} md={4} sm={6} xs={12}>
             <Card>
@@ -20,7 +18,8 @@ export default function MediaCard({ team, deleteTeam }) {
                         component="img"
                         image={
                             team.img
-                                ? "http://localhost:4000" + team.img
+                                ? "https://workflow-347205.rj.r.appspot.com" +
+                                  team.img
                                 : Default
                         }
                         alt="image"

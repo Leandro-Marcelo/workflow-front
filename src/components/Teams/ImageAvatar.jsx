@@ -4,11 +4,14 @@ import Stack from "@mui/material/Stack";
 /* import Piba from "../../assets/img/1.jpeg"; */
 
 export default function ImageAvatars({ img, name }) {
-    const apiURL = "http://localhost:4000";
+    const PF = process.env.APIREST;
     return (
         <Stack direction="row" spacing={2}>
             {/* esto me tira problema de cors */}
-            <Avatar alt={name} src={apiURL + img} />
+            <Avatar
+                alt={name}
+                src={"https://workflow-347205.rj.r.appspot.com" + img}
+            />
         </Stack>
     );
 }

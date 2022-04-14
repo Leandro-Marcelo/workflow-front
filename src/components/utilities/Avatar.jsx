@@ -9,6 +9,7 @@ export default function ImageAvatars({ member, role, Leader, idTeam }) {
     /*  const expelUser = () => {
         dispatch(deleteMember({ idTeam, _id }));
     }; */
+    const PF = process.env.APIREST;
     return (
         <div className="grid grid-cols-5 justify-between w-full gap-12 mb-4">
             <div className="flex items-center">
@@ -21,8 +22,8 @@ export default function ImageAvatars({ member, role, Leader, idTeam }) {
                 <Avatar
                     alt={name ? name : ""}
                     src={
-                        `http://localhost:4000${img}`
-                            ? `http://localhost:4000${img}`
+                        `https://workflow-347205.rj.r.appspot.com${img}`
+                            ? `https://workflow-347205.rj.r.appspot.com${img}`
                             : ""
                     }
                 />

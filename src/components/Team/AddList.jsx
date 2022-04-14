@@ -81,5 +81,3 @@ const AddList = ({ idTeam }) => {
 };
 
 export default AddList;
-
-/* Esto es del los otro icons<div className="hover:bg-[#ddd] w-8 h-8 flex justify-center items-center text-black"></div> */

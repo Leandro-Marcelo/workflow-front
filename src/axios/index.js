@@ -2,9 +2,10 @@ import axios from "axios";
 
 /* voy a usar la técnica de tzuzul aunque el agregó un proxy */
 /* const URL = ; */
+/* const URL = "http://localhost:4000"; */
 
 const instance = axios.create({
-    baseURL: "http://localhost:4000",
+    baseURL: "https://workflow-347205.rj.r.appspot.com",
 });
 
 const aGet = async (url) => {

@@ -9,55 +9,23 @@ import Grid from "@mui/material/Grid";
 
 import Typography from "@mui/material/Typography";
 import AddIcon from "@mui/icons-material/Add";
-import { Fab } from "@mui/material";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
 
 const theme = createTheme();
 
 export default function SignInSide({ createData, handleClose }) {
     const handleSubmit = (event) => {
-        console.log(event.currentTarget);
         event.preventDefault();
         const team = new FormData(event.currentTarget);
         createData(team);
         handleClose();
-        /*    console.log({
-            name: data.get("name"),
-            description: data.get("description"),
-            image: data.get("img"),
-        }); */
     };
 
     return (
         <ThemeProvider theme={theme}>
             <Grid container component="main" sx={{ height: "50vh" }}>
                 <CssBaseline />
-                {/* <Grid
-                    item
-                    xs={false}
-                    sm={4}
-                    md={7}
-                    sx={{
-                        backgroundImage:
-                            "url(https://source.unsplash.com/random)",
-                        backgroundRepeat: "no-repeat",
-                        backgroundColor: (t) =>
-                            t.palette.mode === "light"
-                                ? t.palette.grey[50]
-                                : t.palette.grey[900],
-                        backgroundSize: "cover",
-                        backgroundPosition: "center",
-                    }}
-                /> */}
-                <Grid
-                    item
-                    xs={12}
-                    /*  sm={8}
-                    md={12} */
-                    component={Paper}
-                    elevation={6}
-                    square
-                >
+                <Grid item xs={12} component={Paper} elevation={6} square>
                     <Box
                         sx={{
                             my: 8,
@@ -86,40 +54,15 @@ export default function SignInSide({ createData, handleClose }) {
                                 autoComplete="name"
                                 autoFocus
                             />
-                            {/* <TextField
-                                margin="normal"
-                                required
-                                fullWidth
-                                name="description"
-                                label="Descripción"
-                                id="description"
-                            /> */}
-                            {/* <label htmlFor="img" className="mt">
-                                <input
-                                    style={{
-                                        display: "none",
-                                    }}
-                                    id="img"
-                                    name="img"
-                                    type="file"
-                                    //accept=".png,.jpeg,.jpg"
-                                />
-                                <Fab
-                                    color="primary"
-                                    size="small"
-                                    component="span"
-                                    aria-label="add"
-                                    variant="extended"
-                                >
-                                    <AddIcon /> Subir Imagen
-                                </Fab>
-                            </label> */}
                             <Button
                                 fullWidth
                                 variant="outlined"
                                 sx={{ mt: 2, cursor: "default" }}
                             >
-                                <label htmlFor="img" className="file">
+                                <label
+                                    htmlFor="img"
+                                    className="flex items-center w-full justify-center cursor-pointer"
+                                >
                                     <input
                                         style={{
                                             display: "none",

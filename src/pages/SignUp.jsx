@@ -6,7 +6,6 @@ import Box from "@mui/material/Box";
 import Grid from "@mui/material/Grid";
 import Typography from "@mui/material/Typography";
 import { createTheme, ThemeProvider } from "@mui/material/styles";
-import Providers from "../components/SignUp/Providers";
 import { Link, useNavigate } from "react-router-dom";
 import AddIcon from "@mui/icons-material/Add";
 import { useEffect, useState } from "react";
@@ -15,13 +14,14 @@ import { Alert, CircularProgress } from "@mui/material";
 import { signUp } from "../features/auth/authSlice";
 
 export default function SignInSide() {
+    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
     const theme = createTheme();
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     /* console.log(auth.logged); */
     useEffect(() => {
-        if (auth.logged) navigate("/teams");
+        if (auth.logged) navigate("/workflow-frontend");
     }, [auth]);
 
     /* Otra forma de registrarse sería hacer todo en el evento sign in / submit, es decir, agarrar recien los datos ya que probablemente son los finales y crearlo, pero la ventaja de que esten controlados es que puedo hacer validaciones */
@@ -41,6 +41,7 @@ export default function SignInSide() {
         user.append("password", credentials.password);
         user.append("img", credentials.img);
 
+        /* console.log(credentials); */
         dispatch(signUp(user));
 
         //redireccionarlo
@@ -71,8 +72,7 @@ export default function SignInSide() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage:
-                            "url(https://source.unsplash.com/random)",
+                        backgroundImage: `url(https://workflow-347205.rj.r.appspot.com/files/kanban-project-management.jpg)`,
                         backgroundRepeat: "no-repeat",
                         backgroundColor: (t) =>
                             t.palette.mode === "light"
@@ -100,9 +100,6 @@ export default function SignInSide() {
                             alignItems: "center",
                         }}
                     >
-                        {/* <Typography component="h1" variant="h4">
-                            Welcome to LeanWorkflow!
-                        </Typography> */}
                         <Typography component="h1" variant="h4">
                             Sign Up
                         </Typography>
@@ -146,13 +143,14 @@ export default function SignInSide() {
                             <Button
                                 fullWidth
                                 variant="outlined"
-                                sx={{ mt: 2, cursor: "default" }}
+                                sx={{ cursor: "default", marginTop: 2 }}
                             >
-                                <label htmlFor="img" className="file">
+                                <label
+                                    htmlFor="img"
+                                    className="file w-full cursor-pointer"
+                                >
                                     <input
-                                        style={{
-                                            display: "none",
-                                        }}
+                                        className="hidden "
                                         id="img"
                                         name="img"
                                         type="file"
@@ -161,12 +159,12 @@ export default function SignInSide() {
                                         }
                                         /* accept=".png,.jpeg,.jpg" */
                                     />
-                                    <AddIcon /> Subir Imagen
+                                    <AddIcon /> Profile Picture
                                 </label>
                             </Button>
-                            {auth.signUpError ? (
-                                <Alert severity="error">
-                                    {auth.signUpError}
+                            {auth.statusSignUp === "rejected" ? (
+                                <Alert severity="error" className="mt-6">
+                                    {auth.messageSignUp}
                                 </Alert>
                             ) : null}
                             <Button
@@ -184,7 +182,6 @@ export default function SignInSide() {
                                     "Sign Up"
                                 )}
                             </Button>
-                            <Providers />
                             <Typography
                                 component="h6"
                                 variant="h6"
