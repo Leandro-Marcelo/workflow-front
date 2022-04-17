@@ -4,17 +4,19 @@ import AddList from "../components/Team/AddList";
 import { useNavigate, useParams } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import {
+    filteredUsers,
     getTeam,
     updateList,
     updateLists,
     updateListsOrder,
 } from "../features/team/teamSlice";
 import { DragDropContext, Droppable } from "react-beautiful-dnd";
-import Members from "../components/Team/Members";
+import ModalMembers from "../components/Team/ModalMembers";
 
 const Team = () => {
     const team = useSelector((state) => state.team);
     const auth = useSelector((state) => state.auth);
+    const users = useSelector((state) => state.users);
     const navigate = useNavigate();
     const dispatch = useDispatch();
     const params = useParams();
@@ -23,7 +25,13 @@ const Team = () => {
     }, [auth]);
     useEffect(() => {
         dispatch(getTeam(params.idTeam));
-    }, []);
+        if (team.members.length > 0) {
+            const membersId = team.members.map((member) => {
+                return member._id._id;
+            });
+            dispatch(filteredUsers({ membersId }));
+        }
+    }, [params.idTeam, team.members]);
 
     const onDragEnd = ({ source, destination, type }) => {
         console.log(team.lists);
@@ -209,11 +217,13 @@ const Team = () => {
                 <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
                     {team && team.team.name}
                 </p>
-                {/* <Members team={team} /> */}
-                <p className="mr-2 bg-white/30 hover:bg-white/40 px-2 py-1">
-                    {/* lo ideal sería que no se pueda volver agregar al mismo usuario */}
-                    Agregar Usuario
-                </p>
+                {/* Acá es mejor pasarle las cosas por props así tipo pasarle team={team} y luego a traves de una lógica defino si renderiza tal componente con cierta información del team u otra, o mejor tomo este team del redux */}
+                <ModalMembers team={team} title={"Miembros del Equipo"} />
+                <ModalMembers
+                    team={team}
+                    title={"Añadir Miembro"}
+                    isFilteredUsers={true}
+                />
             </div>
             {/* para el 90% en iphone va perfecto */}
             {/* 97% */}

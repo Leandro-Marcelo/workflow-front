@@ -17,7 +17,7 @@ function App() {
         <BrowserRouter>
             {/* las rutas deben ir en español porque es lo que va a ver el usuario o igual debería ir en inglés? */}
             <Routes>
-                <Route path="/workflow-frontend" element={<Teams />} />
+                <Route path="/workflow-front" element={<Teams />} />
                 <Route path="/teams/:idTeam" element={<Team />} />
                 <Route path="/signup" element={<SignUp />} />
                 <Route path="/login" element={<Login />} />

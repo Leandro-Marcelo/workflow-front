@@ -6,6 +6,7 @@ import { useDispatch, useSelector } from "react-redux";
 import TableTeam from "../components/Teams/TableTeam";
 import { addTeam, getTeams, removeTeam } from "../features/teams/teamsSlice";
 import AppBarResponsive from "../components/NavBar/AppBarResponsive";
+import { getUsers } from "../features/users/usersSlice";
 
 const Home = () => {
     const teams = useSelector((state) => state.teams);
@@ -19,6 +20,7 @@ const Home = () => {
 
     useEffect(() => {
         dispatch(getTeams());
+        dispatch(getUsers());
     }, []);
 
     const createData = (team) => {

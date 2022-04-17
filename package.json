@@ -1,6 +1,6 @@
 {
-    "homepage": "http://leandro-marcelo.github.io/workflow-frontend/",
-    "name": "workflow-frontend",
+    "homepage": "http://leandro-marcelo.github.io/workflow-front/",
+    "name": "workflow-front",
     "version": "0.1.0",
     "private": true,
     "dependencies": {

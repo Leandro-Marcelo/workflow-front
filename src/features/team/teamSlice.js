@@ -6,6 +6,8 @@ const initialState = {
     members: [],
     lists: [],
     listsOrder: [],
+    /* usuarios que puedo añadir al Miembro */
+    filteredUsers: [],
     /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
     getTeamStatus: "",
     getTeamError: "",
@@ -196,6 +198,71 @@ export const deleteTask = createAsyncThunk(
         } catch (error) {
             console.log(error.response.data);
 
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+/* ********************* Members ************************ */
+
+export const changeRole = createAsyncThunk(
+    "team/changeRole",
+    /* necesito el idList y las tareas */
+    async (data, { rejectWithValue }) => {
+        try {
+            /* lo ideal es que devuelta la data actualizada desde el backend */
+            const response = await aPost(`/teams/changeRole`, data);
+            return data;
+        } catch (error) {
+            console.log(error.response.data);
+
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+export const deleteMember = createAsyncThunk(
+    "team/deleteMember",
+    /* necesito el idList y las tareas */
+    async ({ idTeam, idMember }, { rejectWithValue }) => {
+        try {
+            const response = await aDelete(
+                `/teams/${idTeam}/removeMember/${idMember}`
+            );
+            return { idTeam, idMember };
+        } catch (error) {
+            console.log(error.response.data);
+
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+/* ********************* Users ************************ */
+
+export const filteredUsers = createAsyncThunk(
+    "team/filteredUsers",
+    async (membersId, { rejectWithValue }) => {
+        try {
+            const response = await aPost("/teams/filteredUsers", membersId);
+            console.log(response.data);
+            return response.data;
+        } catch (error) {
+            console.log(error.response.data);
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+export const addMember = createAsyncThunk(
+    "team/addMember",
+    async (data, { rejectWithValue }) => {
+        try {
+            const response = await aPost("/teams/addMember", data);
+            console.log(response.data);
+            return data;
+        } catch (error) {
+            console.log(error.response.data);
             return rejectWithValue(error.response?.data);
         }
     }
@@ -647,6 +714,158 @@ const teamSlice = createSlice({
                 addListError: "",
                 updateListNameStatus: "rejected",
                 updateListNameError: "",
+            };
+        },
+        /* ************************ Members *************************** */
+        [changeRole.pending]: (state, action) => {
+            return {
+                ...state,
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "",
+                updateListNameError: "",
+            };
+        },
+        [changeRole.fulfilled]: (state, action) => {
+            const filteredMember = state.members.filter((member) => {
+                return member._id._id === action.payload.idMember;
+            });
+
+            const updatedRole = {
+                ...filteredMember[0],
+                role: action.payload.newRole,
+            };
+
+            const updatedMembers = state.members.map((member) =>
+                member._id._id === action.payload.idMember
+                    ? updatedRole
+                    : member
+            );
+
+            /* console.log(JSON.stringify(updatedMembers)); */
+
+            return {
+                ...state,
+                members: updatedMembers,
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameError: "",
+            };
+        },
+        [changeRole.rejected]: (state, action) => {
+            return {
+                ...state,
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "rejected",
+                updateListNameError: "",
+            };
+        },
+        [deleteMember.pending]: (state, action) => {
+            return {
+                ...state,
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "",
+                updateListNameError: "",
+            };
+        },
+        [deleteMember.fulfilled]: (state, action) => {
+            const filteredMember = state.members.filter((member) => {
+                return member._id._id !== action.payload.idMember;
+            });
+
+            /* console.log(JSON.stringify(filteredMember)); */
+
+            /* const updatedMembers = state.members.map((member) =>
+                member._id._id === action.payload.idMember
+                    ? updatedRole
+                    : member
+            ); */
+
+            return {
+                ...state,
+                members: filteredMember,
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameError: "",
+            };
+        },
+        [deleteMember.rejected]: (state, action) => {
+            return {
+                ...state,
+                getTeamStatus: "",
+                getTeamError: "",
+                updateListStatus: "",
+                updateListError: "",
+                addTaskStatus: "",
+                addTaskError: "",
+                addListStatus: "",
+                addListError: "",
+                updateListNameStatus: "rejected",
+                updateListNameError: "",
+            };
+        },
+        [filteredUsers.pending]: (state, action) => {
+            return {
+                ...state,
+            };
+        },
+        [filteredUsers.fulfilled]: (state, action) => {
+            return {
+                ...state,
+                filteredUsers: action.payload,
+            };
+        },
+        [filteredUsers.rejected]: (state, action) => {
+            return {
+                ...state,
+            };
+        },
+        [addMember.pending]: (state, action) => {
+            return {
+                ...state,
+            };
+        },
+        [addMember.fulfilled]: (state, action) => {
+            /* state.members.push(action.payload) */
+            return {
+                ...state,
+            };
+        },
+        [addMember.rejected]: (state, action) => {
+            return {
+                ...state,
             };
         },
     },

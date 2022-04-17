@@ -84,6 +84,7 @@ const List = ({ list, index, idTeam }) => {
                                         /*  className="bg-green-600" */
                                         ref={provided.innerRef}
                                         /* para que pueda entrar, este tiene que tener un height almenos, si es 0 no te va a dejar xd */
+                                        /* min-h-[5px] */
                                         className={"min-h-[1px]"}
                                     >
                                         {list.tasks.map((task, index) => {

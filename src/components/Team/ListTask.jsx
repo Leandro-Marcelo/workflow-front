@@ -3,6 +3,7 @@ import { Draggable } from "react-beautiful-dnd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { deleteTask } from "../../features/team/teamSlice";
+import ModalComment from "../Team/comment/ModalComment";
 const ListTask = ({ task, index, idList }) => {
     /* console.log(`que llega acá`, card); */
     const dispatch = useDispatch();
@@ -35,6 +36,9 @@ const ListTask = ({ task, index, idList }) => {
                             {task.name}
                         </div>
                         {/* y este div no existía */}
+                        <div className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer">
+                            <ModalComment />
+                        </div>
                         <div
                             className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"
                             onClick={removeTask}

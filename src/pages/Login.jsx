@@ -21,7 +21,7 @@ export default function SignInSide() {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (auth.logged) navigate("/workflow-frontend");
+        if (auth.logged) navigate("/workflow-front");
     }, [auth]);
 
     const initialState = {
