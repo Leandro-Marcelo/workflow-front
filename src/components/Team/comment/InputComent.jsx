@@ -5,7 +5,7 @@ import Button from "@mui/material/Button";
 import AttachFileIcon from "@mui/icons-material/AttachFile";
 const InputComent = () => {
     return (
-        <div className="w-full min-h-[144px] flex flex-col bg-[white] p-6">
+        <div className="w-full min-h-[144px] flex flex-col bg-[white] p-6 rounded-[8px]">
             <TextareaAutosize
                 className="w-full border-2  border-[#67727E] rounded-[8px] mb-6 px-5 py-3 resize-none"
                 placeholder="Agrega un comentario"
@@ -17,14 +17,14 @@ const InputComent = () => {
                     alt=""
                     className="rounded-[50%] w-[40px] h-[40px]"
                 />
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-3 flex-col">
                     <Button
                         fullWidth
                         variant="outlined"
                         sx={{
                             cursor: "default",
                             height: "48px",
-                            width: "184px",
+                            width: "124px",
                         }}
                         /* className="mt-2 cursor-default h-[48px] w-[104px]" */
                     >
@@ -45,9 +45,8 @@ const InputComent = () => {
                         </label>
                     </Button>
                     {/* esto podría ser un checkbox, radiusbutton o algo que afirme que subió un archivo, sería bueno que dijera que tipo de archivo subió pero podría romper la ui xd o poner el nombre pero despues de ciertos caracteres poner .... */}
-                    <p>0 archivos</p>
                 </div>
-                <button className="h-[48px] w-[104px] bg-[#5357B6] rounded-[8px] text-white font-semibold">
+                <button className="h-[38px] w-[84px] bg-[#5357B6] rounded-[8px] text-white font-semibold">
                     SEND
                 </button>
             </div>

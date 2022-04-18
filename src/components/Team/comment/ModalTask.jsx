@@ -6,10 +6,16 @@ import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import Content from "./Content";
 import CloseIcon from "@mui/icons-material/Close";
-export default function TransitionsModal({ team, name, isFilteredUsers }) {
+import { useDispatch } from "react-redux";
+import { updateTask } from "../../../features/team/teamSlice";
+export default function TransitionsModal({ task }) {
+    const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
+    const updateTask2 = (form) => {
+        dispatch(updateTask({ form, idTask: task._id }));
+    };
 
     return (
         <div>
@@ -41,7 +47,7 @@ export default function TransitionsModal({ team, name, isFilteredUsers }) {
                                     component="h2"
                                     className="text-black text-center"
                                 >
-                                    Comment
+                                    Tarea
                                 </Typography>
                             }
                             <div onClick={handleClose}>
@@ -49,7 +55,7 @@ export default function TransitionsModal({ team, name, isFilteredUsers }) {
                             </div>
                         </div>
                         <div className="flex justify-center">
-                            <Content />
+                            <Content task={task} updateTask2={updateTask2} />
                         </div>
                     </div>
                 </Fade>

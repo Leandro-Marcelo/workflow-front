@@ -24,7 +24,6 @@ const ListName = ({ name, idList }) => {
 
     /* handleBlur y enter */
     const handleBlur = () => {
-        console.log(listName.name);
         dispatch(updateListName({ idList, name: listName.name }));
     };
 

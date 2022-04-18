@@ -25,13 +25,7 @@ const Team = () => {
     }, [auth]);
     useEffect(() => {
         dispatch(getTeam(params.idTeam));
-        if (team.members.length > 0) {
-            const membersId = team.members.map((member) => {
-                return member._id._id;
-            });
-            dispatch(filteredUsers({ membersId }));
-        }
-    }, [params.idTeam, team.members]);
+    }, []);
 
     const onDragEnd = ({ source, destination, type }) => {
         console.log(team.lists);

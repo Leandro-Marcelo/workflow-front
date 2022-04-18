@@ -11,9 +11,10 @@ export default function BasicMenu({
     removeMember,
     isFilteredUsers,
     addAMember,
+    name,
+    email,
+    img,
 }) {
-    console.log("idTeam", idTeam, "idMember", idMember);
-
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);
     const handleClick = (event) => {
@@ -44,7 +45,11 @@ export default function BasicMenu({
                         "aria-labelledby": "basic-button",
                     }}
                 >
-                    <MenuItem onClick={() => addAMember(idTeam, idNewMember)}>
+                    <MenuItem
+                        onClick={() =>
+                            addAMember(idTeam, idNewMember, name, email, img)
+                        }
+                    >
                         Añadir al equipo
                     </MenuItem>
                 </Menu>

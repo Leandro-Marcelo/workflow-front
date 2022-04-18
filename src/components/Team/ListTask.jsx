@@ -3,14 +3,12 @@ import { Draggable } from "react-beautiful-dnd";
 import DeleteIcon from "@mui/icons-material/Delete";
 import { useDispatch } from "react-redux";
 import { deleteTask } from "../../features/team/teamSlice";
-import ModalComment from "../Team/comment/ModalComment";
+import ModalTask from "./comment/ModalTask";
 const ListTask = ({ task, index, idList }) => {
-    /* console.log(`que llega acá`, card); */
+    console.log(`TAAAAAKSS`, task);
     const dispatch = useDispatch();
     const removeTask = () => {
         dispatch(deleteTask({ idList, idTask: task._id }));
-        /* console.log(task._id);
-        console.log(idList); */
     };
     return (
         /* no nos deja crear una tarjeta sin nombre */
@@ -37,7 +35,7 @@ const ListTask = ({ task, index, idList }) => {
                         </div>
                         {/* y este div no existía */}
                         <div className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer">
-                            <ModalComment />
+                            <ModalTask task={task} />
                         </div>
                         <div
                             className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"

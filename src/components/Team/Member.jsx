@@ -27,8 +27,8 @@ export default function AlignItemsList({ team, isFilteredUsers }) {
         dispatch(deleteMember({ idTeam, idMember }));
     };
 
-    const addAMember = (idTeam, idNewMember) => {
-        dispatch(addMember({ idTeam, idNewMember }));
+    const addAMember = (idTeam, idNewMember, name, email, img) => {
+        dispatch(addMember({ idTeam, idNewMember, name, email, img }));
     };
 
     return (
@@ -85,6 +85,9 @@ export default function AlignItemsList({ team, isFilteredUsers }) {
                                 <MenuMoreVertIcon
                                     idTeam={team.team._id}
                                     idNewMember={el._id}
+                                    name={el.name}
+                                    email={el.email}
+                                    img={el.img ? el.img : ""}
                                     isFilteredUsers={isFilteredUsers}
                                     addAMember={addAMember}
                                 />

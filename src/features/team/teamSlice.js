@@ -29,8 +29,14 @@ export const getTeam = createAsyncThunk(
     async (idTeam, { rejectWithValue }) => {
         try {
             const response = await aGet("/teams/" + idTeam);
-            console.log(`que trae acá:`, response.data);
-            return response.data;
+            const membersId = response.data.members.map((member) => {
+                return member._id._id;
+            });
+            /* puedo enviarle un arreglo directo o debo enviar si o si un JSON */
+            const response2 = await aPost("/teams/filteredUsers", {
+                membersId,
+            });
+            return { ...response.data, filteredUsers: response2.data };
         } catch (error) {
             console.log(error.response.data);
             /* mandamos como action.payload el error que nos retorna el backend */
@@ -221,6 +227,23 @@ export const changeRole = createAsyncThunk(
     }
 );
 
+export const addMember = createAsyncThunk(
+    "team/addMember",
+    async ({ idTeam, idNewMember, name, email, img }, { rejectWithValue }) => {
+        try {
+            const response = await aPost("/teams/addMember", {
+                idTeam,
+                idNewMember,
+            });
+            console.log(response.data);
+            return { _id: idNewMember, name, email, img };
+        } catch (error) {
+            console.log(error.response.data);
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
 export const deleteMember = createAsyncThunk(
     "team/deleteMember",
     /* necesito el idList y las tareas */
@@ -238,31 +261,20 @@ export const deleteMember = createAsyncThunk(
     }
 );
 
-/* ********************* Users ************************ */
+/* ********************* Tasks ************************ */
 
-export const filteredUsers = createAsyncThunk(
-    "team/filteredUsers",
-    async (membersId, { rejectWithValue }) => {
+export const updateTask = createAsyncThunk(
+    "team/updateTask",
+    /* necesito el idList y las tareas */
+    async ({ form, idTask }, { rejectWithValue }) => {
+        console.log(form);
+        console.log(idTask);
         try {
-            const response = await aPost("/teams/filteredUsers", membersId);
-            console.log(response.data);
+            const response = await aPut(`/tasks/${idTask}`, form);
             return response.data;
         } catch (error) {
             console.log(error.response.data);
-            return rejectWithValue(error.response?.data);
-        }
-    }
-);
 
-export const addMember = createAsyncThunk(
-    "team/addMember",
-    async (data, { rejectWithValue }) => {
-        try {
-            const response = await aPost("/teams/addMember", data);
-            console.log(response.data);
-            return data;
-        } catch (error) {
-            console.log(error.response.data);
             return rejectWithValue(error.response?.data);
         }
     }
@@ -287,7 +299,8 @@ const teamSlice = createSlice({
             };
         },
         [getTeam.fulfilled]: (state, action) => {
-            const { name, description, _id, img, idLeader } = action.payload;
+            const { name, description, _id, img, idLeader, filteredUsers } =
+                action.payload;
             const team = { name, description, _id, img, idLeader };
             const { members } = action.payload;
             const { lists } = action.payload;
@@ -298,6 +311,7 @@ const teamSlice = createSlice({
                 members: members,
                 lists: lists,
                 listsOrder,
+                filteredUsers,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
                 getTeamStatus: "success",
                 getTeamError: "",
@@ -799,17 +813,19 @@ const teamSlice = createSlice({
                 return member._id._id !== action.payload.idMember;
             });
 
-            /* console.log(JSON.stringify(filteredMember)); */
+            const filteredMember2 = state.members.filter((member) => {
+                return member._id._id === action.payload.idMember;
+            });
 
-            /* const updatedMembers = state.members.map((member) =>
-                member._id._id === action.payload.idMember
-                    ? updatedRole
-                    : member
-            ); */
+            const updatedFilteredUsers = [
+                ...state.filteredUsers,
+                filteredMember2[0]._id,
+            ];
 
             return {
                 ...state,
                 members: filteredMember,
+                filteredUsers: updatedFilteredUsers,
                 getTeamStatus: "",
                 getTeamError: "",
                 updateListStatus: "",
@@ -836,34 +852,68 @@ const teamSlice = createSlice({
                 updateListNameError: "",
             };
         },
-        [filteredUsers.pending]: (state, action) => {
-            return {
-                ...state,
-            };
-        },
-        [filteredUsers.fulfilled]: (state, action) => {
-            return {
-                ...state,
-                filteredUsers: action.payload,
-            };
-        },
-        [filteredUsers.rejected]: (state, action) => {
-            return {
-                ...state,
-            };
-        },
+
         [addMember.pending]: (state, action) => {
             return {
                 ...state,
             };
         },
         [addMember.fulfilled]: (state, action) => {
-            /* state.members.push(action.payload) */
+            const { _id, name, email, img } = action.payload;
+            const newMember = {
+                _id: { _id, name, email, img },
+                role: "normal",
+            };
+            const updatedFilteredUser = state.filteredUsers.filter(
+                (user) => user._id !== _id
+            );
+            const updatedMembers = [...state.members, newMember];
+            return {
+                ...state,
+                members: updatedMembers,
+                filteredUsers: updatedFilteredUser,
+            };
+        },
+        [addMember.rejected]: (state, action) => {
             return {
                 ...state,
             };
         },
-        [addMember.rejected]: (state, action) => {
+        [updateTask.pending]: (state, action) => {
+            return {
+                ...state,
+            };
+        },
+        [updateTask.fulfilled]: (state, action) => {
+            /* state.lists.map((list)); */
+            const filteredList = state.lists.filter(
+                (list) => list._id === action.payload.idList
+            );
+
+            /*  const updatedFilteredList = filteredList[0].tasks.filter((task) =>
+                task._id === action.payload._id ? action.payload : task
+            ); */
+            console.log(`action.payload`, action.payload);
+            const updatedTasks = filteredList[0].tasks.map((task) => {
+                return task._id === action.payload._id ? action.payload : task;
+            });
+
+            const updatedList = {
+                ...filteredList[0],
+                tasks: updatedTasks,
+            };
+
+            const updatedLists = state.lists.map((list) =>
+                list._id === updatedList._id ? updatedList : list
+            );
+
+            console.log(JSON.stringify(updatedLists));
+            return {
+                ...state,
+                lists: updatedLists,
+            };
+        },
+        [updateTask.rejected]: (state, action) => {
             return {
                 ...state,
             };
