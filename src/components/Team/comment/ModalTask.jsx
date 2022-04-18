@@ -6,9 +6,12 @@ import Typography from "@mui/material/Typography";
 import EditIcon from "@mui/icons-material/Edit";
 import Content from "./Content";
 import CloseIcon from "@mui/icons-material/Close";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { updateTask } from "../../../features/team/teamSlice";
+import { getComments, removeComment } from "../../../features/team/comments";
+import { CircularProgress } from "@mui/material";
 export default function TransitionsModal({ task }) {
+    const comments = useSelector((state) => state.comments);
     const dispatch = useDispatch();
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
@@ -17,12 +20,21 @@ export default function TransitionsModal({ task }) {
         dispatch(updateTask({ form, idTask: task._id }));
     };
 
+    const handleClick = () => {
+        handleOpen();
+        dispatch(getComments({ idTask: task._id }));
+    };
+
+    const deleteComment = (idComment) => {
+        dispatch(removeComment({ idTask: task._id, idComment }));
+    };
+
     return (
         <div>
             {/* este es el button */}
             <EditIcon
                 className="  text-[#6b778c] hover:text-[#172b4d]  px-1"
-                onClick={handleOpen}
+                onClick={handleClick}
             />
 
             <Modal
@@ -55,7 +67,16 @@ export default function TransitionsModal({ task }) {
                             </div>
                         </div>
                         <div className="flex justify-center">
-                            <Content task={task} updateTask2={updateTask2} />
+                            {comments.taskComments.comments ? (
+                                <Content
+                                    task={task}
+                                    updateTask2={updateTask2}
+                                    taskComments={comments.taskComments}
+                                    deleteComment={deleteComment}
+                                />
+                            ) : (
+                                <CircularProgress />
+                            )}
                         </div>
                     </div>
                 </Fade>

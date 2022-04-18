@@ -5,9 +5,8 @@ import Modal from "@mui/material/Modal";
 import Fade from "@mui/material/Fade";
 import Button from "@mui/material/Button";
 import Typography from "@mui/material/Typography";
-import CloseIcon from "@mui/icons-material/Close";
 import DeleteIcon from "@mui/icons-material/Delete";
-import Stack from "@mui/material/Stack";
+import Delete from "../Team/comment/assets/Delete.svg";
 
 const style = {
     position: "absolute",
@@ -21,26 +20,43 @@ const style = {
     borderRadius: "0.5rem",
 };
 
-export default function TransitionsModal({ deleteTeam, idTeam }) {
+export default function TransitionsModal({
+    deleteTeam,
+    idTeam,
+    modalTitle,
+    deleteComment,
+    idComment,
+}) {
     const [open, setOpen] = React.useState(false);
     const handleOpen = () => setOpen(true);
     const handleClose = () => setOpen(false);
 
-    const teamEliminated = () => {
-        console.log(`me ejecuto`);
+    const removeTeam = () => {
         deleteTeam(idTeam);
+        setOpen(false);
+    };
+
+    const removeComment = () => {
+        deleteComment(idComment);
         setOpen(false);
     };
 
     return (
         <div>
-            <Button
-                variant="outlined"
-                onClick={handleOpen}
-                startIcon={<DeleteIcon />}
-            >
-                Eliminar
-            </Button>
+            {idTeam ? (
+                <Button
+                    variant="outlined"
+                    onClick={handleOpen}
+                    startIcon={<DeleteIcon />}
+                >
+                    Eliminar
+                </Button>
+            ) : (
+                <div className="flex items-center gap-1" onClick={handleOpen}>
+                    <img src={Delete} alt="" className="h-[14px] w-[14px]" />
+                    <p className="text-[#ED6368] font-bold">Eliminar</p>
+                </div>
+            )}
             <Modal
                 aria-labelledby="transition-modal-title"
                 aria-describedby="transition-modal-description"
@@ -60,14 +76,14 @@ export default function TransitionsModal({ deleteTeam, idTeam }) {
                                 variant="h6"
                                 component="h2"
                             >
-                                ¿Estas seguro de eliminar el equipo?
+                                {modalTitle}
                             </Typography>
                         </Box>
                         <Box className="flex gap-4">
                             <Button
                                 variant="outlined"
                                 color="error"
-                                onClick={teamEliminated}
+                                onClick={idTeam ? removeTeam : removeComment}
                             >
                                 Eliminar
                             </Button>

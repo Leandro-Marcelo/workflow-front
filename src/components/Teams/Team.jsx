@@ -46,7 +46,11 @@ export default function MediaCard({ team, deleteTeam }) {
                 {/* le puedo pasar como props una función con el id ya puesto? */}
 
                 <Box className="flex justify-around pb-4">
-                    <ModalDelete deleteTeam={deleteTeam} idTeam={team._id} />
+                    <ModalDelete
+                        deleteTeam={deleteTeam}
+                        idTeam={team._id}
+                        modalTitle={"¿Estas seguro de eliminar el equipo?"}
+                    />
                     {/* <ModalDelete /> */}
                 </Box>
             </Card>

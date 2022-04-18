@@ -15,6 +15,7 @@ import { Alert, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 
 export default function SignInSide() {
+    console.log(process.env);
     const theme = createTheme();
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();

@@ -45,21 +45,6 @@ export const getTeam = createAsyncThunk(
     }
 );
 
-/* Agregamos una tarea, funcionando */
-export const addTask = createAsyncThunk(
-    "team/addTask",
-    async ({ idList, name }, { rejectWithValue }) => {
-        const data = { idList, name };
-        try {
-            const response = await aPost(`/lists/${idList}/addTask`, data);
-            return response.data;
-        } catch (error) {
-            console.log(error);
-            return rejectWithValue(error.response?.data);
-        }
-    }
-);
-
 /* Agregamos una lista, funcionando */
 export const addList = createAsyncThunk(
     "team/addList",
@@ -191,23 +176,6 @@ export const deleteList = createAsyncThunk(
         }
     }
 );
-export const deleteTask = createAsyncThunk(
-    "team/deleteTask",
-    /* necesito el idList y las tareas */
-    async ({ idList, idTask }, { rejectWithValue }) => {
-        try {
-            const response = await aDelete(
-                `/lists/${idList}/removeTask/${idTask}`
-            );
-            console.log(`que trae acá:`, response.data);
-            return response.data;
-        } catch (error) {
-            console.log(error.response.data);
-
-            return rejectWithValue(error.response?.data);
-        }
-    }
-);
 
 /* ********************* Members ************************ */
 
@@ -263,6 +231,20 @@ export const deleteMember = createAsyncThunk(
 
 /* ********************* Tasks ************************ */
 
+export const addTask = createAsyncThunk(
+    "team/addTask",
+    async ({ idList, name }, { rejectWithValue }) => {
+        const data = { idList, name };
+        try {
+            const response = await aPost(`/lists/${idList}/addTask`, data);
+            return response.data;
+        } catch (error) {
+            console.log(error);
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
 export const updateTask = createAsyncThunk(
     "team/updateTask",
     /* necesito el idList y las tareas */
@@ -271,6 +253,24 @@ export const updateTask = createAsyncThunk(
         console.log(idTask);
         try {
             const response = await aPut(`/tasks/${idTask}`, form);
+            return response.data;
+        } catch (error) {
+            console.log(error.response.data);
+
+            return rejectWithValue(error.response?.data);
+        }
+    }
+);
+
+export const deleteTask = createAsyncThunk(
+    "team/deleteTask",
+    /* necesito el idList y las tareas */
+    async ({ idList, idTask }, { rejectWithValue }) => {
+        try {
+            const response = await aDelete(
+                `/lists/${idList}/removeTask/${idTask}`
+            );
+            console.log(`que trae acá:`, response.data);
             return response.data;
         } catch (error) {
             console.log(error.response.data);

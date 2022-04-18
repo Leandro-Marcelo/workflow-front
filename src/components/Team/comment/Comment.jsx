@@ -9,8 +9,10 @@ import Remove from "./assets/remove.svg";
 import Oval from "./assets/Oval.jpg";
 import Edit from "./assets/Edit.svg";
 import Delete from "./assets/Delete.svg";
+import ModalDelete from "../../utilities/ModalDelete";
 
-const Comment = () => {
+const Comment = ({ comment, deleteComment }) => {
+    const PF = "http://localhost:4000";
     const [isMyComment, setIsMyComment] = useState(false);
 
     const handleClick = () => {
@@ -33,9 +35,17 @@ const Comment = () => {
             <div className="rightbar">
                 <div className="flex justify-between mb-2">
                     <div className="flex gap-4 items-center">
-                        <img src={Oval} alt="" className="rounded-[50%]" />
+                        <img
+                            src={
+                                comment.idUser.img
+                                    ? PF + comment.idUser.img
+                                    : ""
+                            }
+                            alt=""
+                            className="rounded-[50%] w-[42px] h-[42px]"
+                        />
                         <p className="font-semibold text-[#334253]">
-                            123456789012
+                            {comment.idUser.name}
                         </p>
                         {isMyComment && (
                             <div className=" bg-[#5357B6] text-white px-2 rounded-sm pb-[2px] flex items-center">
@@ -54,7 +64,7 @@ const Comment = () => {
                                     className="h-[14px] w-[14px]"
                                 />
                                 <p className="text-[#ED6368] font-bold">
-                                    Delete
+                                    Eliminar
                                 </p>
                             </div>
                             <div className="flex items-center gap-1">
@@ -63,7 +73,9 @@ const Comment = () => {
                                     alt=""
                                     className="h-[14px] w-[14px]"
                                 />
-                                <p className="text-[#5357B6] font-bold">Edit</p>
+                                <p className="text-[#5357B6] font-bold">
+                                    Editar
+                                </p>
                             </div>
                         </div>
                     ) : (
@@ -76,14 +88,7 @@ const Comment = () => {
               <button>Reply</button> */}
                 </div>
                 <div className="text-[#67727E]">
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Esse ab explicabo eveniet dolorem dignissimos. Consequatur
-                    eius nobis, quo exercitationem laboriosam ab tenetur cum
-                    aperiam modi totam nulla nostrum consequuntur dignissimos.
-                    Lorem ipsum dolor sit amet consectetur adipisicing elit.
-                    Esse ab explicabo eveniet dolorem dignissimos. Consequatur
-                    eius nobis, quo exercitationem laboriosam ab tenetur cum
-                    aperiam modi totam nulla nostrum consequuntur dignissimos.
+                    {comment.content}
                     <button onClick={handleClick}>click me</button>
                 </div>
                 <div className="flex justify-between mt-4">
@@ -100,23 +105,22 @@ const Comment = () => {
                     </div>
                     {isMyComment ? (
                         <div className="flex md:hidden gap-4">
-                            <div className="flex items-center gap-1">
-                                <img
-                                    src={Delete}
-                                    alt=""
-                                    className="h-[14px] w-[14px]"
-                                />
-                                <p className="text-[#ED6368] font-bold">
-                                    Delete
-                                </p>
-                            </div>
+                            <ModalDelete
+                                modalTitle={
+                                    "¿Estas seguro de eliminar el comentario?"
+                                }
+                                deleteComment={deleteComment}
+                                idComment={comment._id}
+                            />
                             <div className="flex items-center gap-1">
                                 <img
                                     src={Edit}
                                     alt=""
                                     className="h-[14px] w-[14px]"
                                 />
-                                <p className="text-[#5357B6] font-bold">Edit</p>
+                                <p className="text-[#5357B6] font-bold">
+                                    Editar
+                                </p>
                             </div>
                         </div>
                     ) : (

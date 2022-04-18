@@ -14,7 +14,7 @@ import Checkbox from "@mui/material/Checkbox";
 import Avatar from "@mui/material/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 
-const Content = ({ task, updateTask2 }) => {
+const Content = ({ task, updateTask2, taskComments, deleteComment }) => {
     console.log(`ALO LEAN?`, task);
     const team = useSelector((state) => state.team);
     const auth = useSelector((state) => state.auth);
@@ -53,11 +53,10 @@ const Content = ({ task, updateTask2 }) => {
     /* List Controls */
     /* Lo ideal sería que utilice el estado de form pero bueno */
 
-    const [checked, setChecked] = React.useState([]);
     const handleToggle = (value) => () => {
         /* indexOf retorna -1 si es que no se encuentra en el arreglo, en caso contrario retorna el indice de donde se encuentra del arreglo */
-        const currentIndex = checked.indexOf(value);
-        const newChecked = [...checked];
+        const currentIndex = form.assigned.indexOf(value);
+        const newChecked = [...form.assigned];
         /* si el id no se encontraba en el arreglo, entonces lo agrega */
         if (currentIndex === -1) {
             newChecked.push(value);
@@ -66,7 +65,7 @@ const Content = ({ task, updateTask2 }) => {
             newChecked.splice(currentIndex, 1);
         }
         /* finalmente actualiza el estado */
-        setChecked(newChecked);
+        /*  setChecked(newChecked); */
         setForm({ ...form, assigned: newChecked });
     };
 
@@ -114,7 +113,7 @@ const Content = ({ task, updateTask2 }) => {
                                                     collaborator._id
                                                 )}
                                                 checked={
-                                                    checked.indexOf(
+                                                    form.assigned.indexOf(
                                                         collaborator._id
                                                     ) !== -1
                                                 }
@@ -143,8 +142,14 @@ const Content = ({ task, updateTask2 }) => {
                         </List>
                     </div>
                 </div>
-                <Comment />
-                <InputComent />
+                {taskComments.comments.map((comment) => (
+                    <Comment
+                        key={comment._id}
+                        comment={comment}
+                        deleteComment={deleteComment}
+                    />
+                ))}
+                <InputComent task={task} />
             </div>
             <div className="flex justify-center">
                 <button

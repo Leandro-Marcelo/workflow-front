@@ -21,7 +21,10 @@ const Team = () => {
     const dispatch = useDispatch();
     const params = useParams();
     useEffect(() => {
-        if (auth.logged === false) navigate("/login");
+        if (auth.logged === false) {
+            console.log(`se esta ejecutando esto`);
+            navigate("/login");
+        }
     }, [auth]);
     useEffect(() => {
         dispatch(getTeam(params.idTeam));
