@@ -15,14 +15,15 @@ import { Alert, CircularProgress } from "@mui/material";
 import { useEffect } from "react";
 
 export default function SignInSide() {
-    console.log(process.env);
+    const APIREST = process.env.REACT_APP_APIREST;
+    console.log(APIREST);
     const theme = createTheme();
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (auth.logged) navigate("/workflow-front");
+        if (auth.logged) navigate("/teams");
     }, [auth]);
 
     const initialState = {
@@ -61,7 +62,7 @@ export default function SignInSide() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: `url(https://workflow-347205.rj.r.appspot.com/files/kanban-project-management.jpg)`,
+                        backgroundImage: `url(${APIREST}/files/kanban-project-management.jpg)`,
                         backgroundRepeat: "no-repeat",
                         backgroundColor: (t) =>
                             t.palette.mode === "light"

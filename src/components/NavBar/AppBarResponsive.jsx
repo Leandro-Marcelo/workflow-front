@@ -13,7 +13,7 @@ import MenuItem from "@mui/material/MenuItem";
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
 import ImageAvatar from "../Teams/ImageAvatar";
-import { CircularProgress } from "@mui/material";
+import { Avatar, CircularProgress } from "@mui/material";
 import { logout } from "../../features/auth/authSlice";
 
 /* como Sign Up esta separado, en el params de la url pone un % */
@@ -23,6 +23,7 @@ const pages = [];
 const settings = [];
 
 const ResponsiveAppBar = () => {
+    const APIREST = process.env.REACT_APP_APIREST;
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const [anchorElNav, setAnchorElNav] = React.useState(null);
@@ -156,13 +157,16 @@ const ResponsiveAppBar = () => {
                                    
                                     src={"../../assets/img/1.jpeg"}
                                 /> */}
-                                {auth.user ? (
-                                    <ImageAvatar
-                                        img={auth.user?.img}
-                                        name={auth.user?.name}
+                                {auth.user && (
+                                    /* creo que era mejor cuando te ponía la inicial de tu nombre xd */
+                                    <Avatar
+                                        src={
+                                            auth.user.img
+                                                ? APIREST + auth.user.img
+                                                : ""
+                                        }
+                                        alt={auth.user.name}
                                     />
-                                ) : (
-                                    <CircularProgress color="inherit" />
                                 )}
                             </IconButton>
                         </Tooltip>

@@ -17,10 +17,13 @@ function App() {
         <BrowserRouter>
             {/* las rutas deben ir en español porque es lo que va a ver el usuario o igual debería ir en inglés? */}
             <Routes>
-                <Route path="/workflow-front" element={<Teams />} />
+                {/* yo quiero que empiece en Login y que de login recien vaya a teams */}
+                {/* <Route path="/workflow-front" element={<Teams />} /> */}
+                {/* <Route path="/login" element={<Login />} /> */}
+                <Route path="/workflow-front" element={<Login />} />
+                <Route path="/teams" element={<Teams />} />
                 <Route path="/teams/:idTeam" element={<Team />} />
                 <Route path="/signup" element={<SignUp />} />
-                <Route path="/login" element={<Login />} />
             </Routes>
         </BrowserRouter>
     );

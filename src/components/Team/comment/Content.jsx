@@ -15,26 +15,9 @@ import Avatar from "@mui/material/Avatar";
 import { useDispatch, useSelector } from "react-redux";
 
 const Content = ({ task, updateTask2, taskComments, deleteComment }) => {
-    console.log(`ALO LEAN?`, task);
     const team = useSelector((state) => state.team);
     const auth = useSelector((state) => state.auth);
-    const currentUser = team.members.filter(
-        (member) => auth.user.id === member._id._id && member
-    );
-    let collaborators;
-    if (currentUser[0].role === "leader") {
-        collaborators = team.members.filter(
-            (member) => member.role !== "leader" && member
-        );
-        collaborators = collaborators.map((collaborator) => collaborator._id);
-    } else {
-        collaborators = team.members.filter((member) => {
-            if (member.role !== "leader" && member.role !== "editor") {
-                return member;
-            }
-        });
-        collaborators = collaborators.map((collaborator) => collaborator._id);
-    }
+    const comments = useSelector((state) => state.comments);
 
     const initialState = {
         name: task.name,
@@ -72,93 +55,126 @@ const Content = ({ task, updateTask2, taskComments, deleteComment }) => {
     return (
         <div className="w-full text-black ">
             <div className="flex justify-center flex-col gap-4">
-                <p>Hecho por: Lean</p>
-                <p>Creado: 4/17/2022 22:25:23</p>
-                <p>Actualizada: 4/17/2022 22:25:23</p>
-                <p>Título de la tarea</p>
+                <p>Hecho por: {task.author}</p>
+                <p> Creado: {new Date(task.created_at).toLocaleString()}</p>
+                <p>Actualizada: {new Date(task.updated_at).toLocaleString()}</p>
+                <p className="text-center text-[#5357B7] font-bold text-xl">
+                    Título de la tarea
+                </p>
                 <TextareaAutosize
-                    className="w-full text-black px-5 py-3 rounded-[8px] resize-none"
+                    className="w-full text-black px-5 py-3 rounded-[8px] resize-none border-2 border-[#5357B6] outline-none"
                     value={form.name}
                     name="name"
                     onChange={(e) => handleChange(e)}
-                    /*  disabled={true} */
+                    disabled={
+                        team.userRole === "validator" ||
+                        team.userRole === "normal"
+                            ? true
+                            : false
+                    }
                 />
 
-                <p>Descripción de la tarea</p>
+                <p className="text-center text-[#5357B7] font-bold text-xl">
+                    Descripción de la tarea
+                </p>
                 <TextareaAutosize
-                    className="w-full text-black px-5 py-3 rounded-[8px] resize-none"
+                    className="w-full border-2 border-[#5357B6] outline-none rounded-[8px] px-5 py-3 resize-none"
                     placeholder="Descripción"
-                    value={form.description}
                     name="description"
+                    value={form.description}
                     onChange={(e) => handleChange(e)}
+                    minRows={3}
+                    disabled={
+                        team.userRole === "validator" ||
+                        team.userRole === "normal"
+                            ? true
+                            : false
+                    }
                 />
-
-                <div>
-                    <p className="text-center">Asignar Tareas</p>
-                    <div className="h-[208px] overflow-y-auto rounded-[8px]">
-                        <List
-                            dense
-                            /* sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }} */
-                            className="bg-[white] w-full max-w-[360px] lg:max-w-[100%] "
-                        >
-                            {collaborators.map((collaborator) => {
-                                const labelId = `checkbox-list-secondary-label-${collaborator._id}`;
-                                return (
-                                    <ListItem
-                                        key={collaborator._id}
-                                        secondaryAction={
-                                            <Checkbox
-                                                edge="end"
-                                                onChange={handleToggle(
-                                                    collaborator._id
-                                                )}
-                                                checked={
-                                                    form.assigned.indexOf(
-                                                        collaborator._id
-                                                    ) !== -1
-                                                }
-                                                inputProps={{
-                                                    "aria-labelledby": labelId,
-                                                }}
-                                            />
-                                        }
-                                        disablePadding
-                                    >
-                                        <ListItemButton>
-                                            <ListItemAvatar>
-                                                <Avatar
-                                                    alt=""
-                                                    src={collaborator.img}
+                {comments.viewMembersByRole.length > 0 && (
+                    <div>
+                        <p className="mb-4 text-center text-[#5357B7] font-bold text-xl">
+                            Asignar Tareas
+                        </p>
+                        <div className="h-[208px] overflow-y-auto rounded-[8px]">
+                            <List
+                                dense
+                                /* sx={{ width: "100%", maxWidth: 360, bgcolor: "background.paper" }} */
+                                className="bg-[white] max-w-[100%]"
+                            >
+                                {comments.viewMembersByRole.map((member) => {
+                                    const labelId = `checkbox-list-secondary-label-${member._id._id}`;
+                                    return (
+                                        <ListItem
+                                            key={member._id._id}
+                                            secondaryAction={
+                                                <Checkbox
+                                                    edge="end"
+                                                    onChange={handleToggle(
+                                                        member._id._id
+                                                    )}
+                                                    checked={
+                                                        form.assigned.indexOf(
+                                                            member._id._id
+                                                        ) !== -1
+                                                    }
+                                                    inputProps={{
+                                                        "aria-labelledby":
+                                                            labelId,
+                                                    }}
                                                 />
-                                            </ListItemAvatar>
-                                            <ListItemText
-                                                id={labelId}
-                                                primary={collaborator.name}
-                                            />
-                                        </ListItemButton>
-                                    </ListItem>
-                                );
-                            })}
-                        </List>
+                                            }
+                                            disablePadding
+                                        >
+                                            <ListItemButton>
+                                                <ListItemAvatar>
+                                                    <Avatar
+                                                        alt=""
+                                                        src={member._id.img}
+                                                    />
+                                                </ListItemAvatar>
+                                                <ListItemText
+                                                    id={labelId}
+                                                    primary={member._id.name}
+                                                    className="font-semibold text-[#334253]"
+                                                />
+                                            </ListItemButton>
+                                        </ListItem>
+                                    );
+                                })}
+                            </List>
+                        </div>
                     </div>
-                </div>
-                {taskComments.comments.map((comment) => (
-                    <Comment
-                        key={comment._id}
-                        comment={comment}
-                        deleteComment={deleteComment}
-                    />
-                ))}
+                )}
+                <p className="text-center text-[#5357B7] font-bold text-xl">
+                    Comentarios
+                </p>
+                {taskComments.comments.map((comment) => {
+                    console.log(`se renderiza los comentarios`);
+                    const isMyComment =
+                        comment.idUser._id === auth.user.id ||
+                        comment.idUser.id === auth.user.id;
+                    return (
+                        <Comment
+                            key={comment._id}
+                            comment={comment}
+                            deleteComment={deleteComment}
+                            isMyComment={isMyComment}
+                        />
+                    );
+                })}
                 <InputComent task={task} />
             </div>
-            <div className="flex justify-center">
-                <button
-                    className="h-[48px] w-[134px] my-4 bg-[#5357B6] rounded-[8px] text-white font-semibold"
-                    onClick={handleClick}
-                >
-                    GUARDAR
-                </button>
-            </div>
+            {comments.viewMembersByRole.length > 0 && (
+                <div className="flex justify-center">
+                    <button
+                        className="h-[48px] w-[154px] my-4 mr-10 bg-[#5357B6] rounded-[8px] text-white font-semibold"
+                        onClick={handleClick}
+                    >
+                        Guardar Cambios
+                    </button>
+                </div>
+            )}
         </div>
     );
 };

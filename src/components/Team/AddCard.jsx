@@ -4,9 +4,11 @@ import { faEllipsis } from "@fortawesome/free-solid-svg-icons"; */
 import CloseIcon from "@mui/icons-material/Close";
 
 import AddIcon from "@mui/icons-material/Add";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addTask } from "../../features/team/teamSlice";
 const AddCard = ({ idList }) => {
+    const auth = useSelector((state) => state.auth);
+    const team = useSelector((state) => state.team);
     const dispatch = useDispatch();
     const spanInput = useRef();
     const handleSpanInput = () => {
@@ -18,7 +20,13 @@ const AddCard = ({ idList }) => {
             return;
         }
         console.log(`este valor tengo`, spanInput.current.textContent);
-        dispatch(addTask({ idList, name: spanInput.current.textContent }));
+        dispatch(
+            addTask({
+                idList,
+                name: spanInput.current.textContent,
+                author: auth.user.name,
+            })
+        );
         /*    addCard(spanInput.current.textContent, id); */
         setOpen(true);
     };
@@ -44,13 +52,20 @@ const AddCard = ({ idList }) => {
                     /* flex  bg-[#00000014] hover:bg-[#00000029]   px-3 py-2 rounded-[3px]  */
                     /* flex pb-2 backdrop-blur-sm bg-white/30 */
                     className="flex items-center mx-2 px-1 text-[#6b778c] hover:text-[#172b4d] rounded-[3px] hover:bg-[#ddd] cursor-pointer "
-                    onClick={() => setOpen(false)}
+                    onClick={() =>
+                        team.userRole === "leader" || team.userRole === "editor"
+                            ? setOpen(false)
+                            : console.log(
+                                  `no tienes rol necesario para crear una tarea, mirar el video de fatz para mandar notificaciones`
+                              )
+                    }
                 >
                     <AddIcon
                         fontSize="small"
                         className="cursor-pointer mr-[3px]"
                     />
-                    <p className="">Add a card</p>
+                    {/* Add a card */}
+                    <p className="">Agregar una tarea</p>
                 </div>
             ) : (
                 <div className="px-2">
@@ -64,10 +79,11 @@ const AddCard = ({ idList }) => {
                         className="w-full min-h-[66px] block rounded-[3px] text-[#172b4d] outline-none px-2 py-1 shadow-[0_0_16px_-8px_#000000aa] bg-white mb-2"
                     ></span>
                     <button
-                        className="hover:bg-[#026aa7] bg-[#0079bf] text-white h-8 w-20 rounded-sm"
+                        /*  Add card */
+                        className="hover:bg-[#026aa7] bg-[#0079bf] text-white h-8 w-32 rounded-sm"
                         onClick={handleSpanInput}
                     >
-                        Add card
+                        Agregar Tarea
                     </button>
                     <CloseIcon
                         className="text-[#42526e] hover:text-[#172b4d] ml-2 cursor-pointer"

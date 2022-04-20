@@ -2,10 +2,11 @@ import React, { useState } from "react";
 import AddIcon from "@mui/icons-material/Add";
 import CloseIcon from "@mui/icons-material/Close";
 import { aPost } from "../../axios";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { addList } from "../../features/team/teamSlice";
 
 const AddList = ({ idTeam }) => {
+    const team = useSelector((state) => state.team);
     const initailForm = {
         name: "",
         description: "",
@@ -35,7 +36,13 @@ const AddList = ({ idTeam }) => {
                 <div
                     /* flex  bg-[#00000014] hover:bg-[#00000029]   px-3 py-2 rounded-[3px] */
                     className="flex  bg-white/30 hover:bg-white/40 px-3 py-2 rounded-[3px] "
-                    onClick={() => setOpen(false)}
+                    onClick={() =>
+                        team.userRole === "leader" || team.userRole === "editor"
+                            ? setOpen(false)
+                            : console.log(
+                                  `no tienes rol necesario para crear una lista, mirar el video de fatz para mandar notificaciones`
+                              )
+                    }
                 >
                     <div className="flex justify-center items-center">
                         <AddIcon
@@ -44,8 +51,9 @@ const AddList = ({ idTeam }) => {
                             className="text-white cursor-pointer "
                         />
                         {/* text-[#172b4d] */}
+                        {/* Add another list */}
                         <p className=" cursor-pointer font-normal text-white">
-                            Add another list
+                            Agregar una lista
                         </p>
                     </div>
                 </div>
@@ -56,18 +64,20 @@ const AddList = ({ idTeam }) => {
                         name="name"
                         id="name"
                         onBlur={null}
-                        placeholder={"Enter list title..."}
+                        /* Enter list title... */
+                        placeholder={"Título de la lista..."}
                         className="w-[264px] h-[36px] cursor-pointer rounded-[3px]  bg-[white] border-2 px-3 py-2 border-[#0079bf] outline-none text-[#172b4d] mb-1"
                         value={newList.name}
                         onChange={handleChange}
                         autoFocus
                     />
                     <div className="flex w-full items-center">
+                        {/*  Add list */}
                         <button
-                            className="hover:bg-[#026aa7] bg-[#0079bf] text-white h-8 w-20 rounded-[3px]"
+                            className="hover:bg-[#026aa7] bg-[#0079bf] text-white h-8 w-32 rounded-[3px]"
                             onClick={createList}
                         >
-                            Add list
+                            Agregar lista
                         </button>
                         <CloseIcon
                             className="text-[#42526e] hover:text-[#172b4d] ml-2 cursor-pointer"

@@ -9,19 +9,14 @@ import { Box, Grid } from "@mui/material";
 import { Link } from "react-router-dom";
 
 export default function MediaCard({ team, deleteTeam }) {
-    const PF = process.env.APIREST;
+    const APIREST = process.env.REACT_APP_APIREST;
     return (
         <Grid item lg={4} md={4} sm={6} xs={12}>
             <Card>
                 <Link to={"/teams/" + team._id}>
                     <CardMedia
                         component="img"
-                        image={
-                            team.img
-                                ? "https://workflow-347205.rj.r.appspot.com" +
-                                  team.img
-                                : Default
-                        }
+                        image={team.img ? APIREST + team.img : Default}
                         alt="image"
                         className="h-[170px]"
                     />

@@ -2,6 +2,7 @@ import * as React from "react";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
 import MoreVertIcon from "@mui/icons-material/MoreVert";
+import { useSelector } from "react-redux";
 
 export default function BasicMenu({
     idTeam,
@@ -14,6 +15,7 @@ export default function BasicMenu({
     name,
     email,
     img,
+    leader,
 }) {
     const [anchorEl, setAnchorEl] = React.useState(null);
     const open = Boolean(anchorEl);

@@ -1,12 +1,12 @@
 import React from "react";
 import { Draggable } from "react-beautiful-dnd";
 import DeleteIcon from "@mui/icons-material/Delete";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteTask } from "../../features/team/teamSlice";
 import ModalTask from "./comment/ModalTask";
 const ListTask = ({ task, index, idList }) => {
-    console.log(`TAAAAAKSS`, task);
     const dispatch = useDispatch();
+    const team = useSelector((state) => state.team);
     const removeTask = () => {
         dispatch(deleteTask({ idList, idTask: task._id }));
     };
@@ -37,12 +37,17 @@ const ListTask = ({ task, index, idList }) => {
                         <div className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer">
                             <ModalTask task={task} />
                         </div>
-                        <div
-                            className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"
-                            onClick={removeTask}
-                        >
-                            <DeleteIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
-                        </div>
+                        {team.userRole === "leader" ||
+                        team.userRole === "editor" ? (
+                            <div
+                                className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"
+                                onClick={removeTask}
+                            >
+                                <DeleteIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
+                            </div>
+                        ) : (
+                            ""
+                        )}
                     </div> //Task Item
                 )}
             </Draggable>
@@ -51,16 +56,3 @@ const ListTask = ({ task, index, idList }) => {
 };
 
 export default ListTask;
-
-/* 
-<div
-                            className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"
-                            
-                        >
-                        
-                            <DeleteIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
-                        </div>
-
-
-
-*/

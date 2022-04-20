@@ -23,7 +23,7 @@ const Team = () => {
     useEffect(() => {
         if (auth.logged === false) {
             console.log(`se esta ejecutando esto`);
-            navigate("/login");
+            navigate("/workflow-front");
         }
     }, [auth]);
     useEffect(() => {

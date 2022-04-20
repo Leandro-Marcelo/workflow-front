@@ -3,14 +3,15 @@ import AddCard from "./AddCard";
 import DeleteIcon from "@mui/icons-material/Delete";
 import ListTask from "./ListTask";
 import { Draggable, Droppable } from "react-beautiful-dnd";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { deleteList, updateListName } from "../../features/team/teamSlice";
 import PanToolIcon from "@mui/icons-material/PanTool";
 
 const List = ({ list, index, idTeam }) => {
     const dispatch = useDispatch();
-
+    const team = useSelector((state) => state.team);
     const initailForm = {
+        /* este list.name es el que viene de la DB */
         name: list.name,
     };
 
@@ -31,8 +32,6 @@ const List = ({ list, index, idTeam }) => {
     };
 
     const removeList = () => {
-        console.log(list._id);
-        console.log(idTeam);
         dispatch(deleteList({ idList: list._id, idTeam }));
     };
 
@@ -44,17 +43,16 @@ const List = ({ list, index, idTeam }) => {
                     <div
                         {...provided.draggableProps}
                         ref={provided.innerRef}
+                        /* w-[272px]  */
                         className="bg-[#EBECF0] text-[#172b4d] w-[272px] rounded-[3px]"
                     >
                         <div className="flex justify-between items-center pl-2 pr-1 py-1 ">
                             <input
                                 type="text"
                                 name="name"
-                                /* este name es el que viene de la DB */
                                 value={listName.name}
                                 onChange={handleChange}
                                 onBlur={handleBlur}
-                                /* autoFocus */
                                 className="w-full h-[24px]  cursor-pointer rounded-[3px] bg-[#EBECF0] focus:bg-[white] focus:border-2 border-[#0079bf] outline-none py-3 px-2 text-[#172b4d]"
                             />
                             <div
@@ -64,13 +62,19 @@ const List = ({ list, index, idTeam }) => {
                                 {/* el padding de 1 es para achicarlo xd */}
                                 <PanToolIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
                             </div>
-                            <div
-                                className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"
-                                onClick={removeList}
-                            >
-                                {/* el padding de 1 es para achicarlo xd */}
-                                <DeleteIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
-                            </div>
+                            {console.log(team.userRole === "editor")}
+                            {team.userRole === "leader" ||
+                            team.userRole === "editor" ? (
+                                <div
+                                    className="hover:bg-[#ddd] flex items-center justify-center w-10 h-8 rounded-[3px] cursor-pointer"
+                                    onClick={removeList}
+                                >
+                                    {/* el padding de 1 es para achicarlo xd */}
+                                    <DeleteIcon className="  text-[#6b778c] hover:text-[#172b4d]  px-1" />
+                                </div>
+                            ) : (
+                                ""
+                            )}
                         </div>
                         {/* overflow-y-auto max-h-[50vh] lg:max-h-[70vh]*/}
                         <div className="max-h-[50vh] lg:max-h-[70vh] overflow-y-auto">

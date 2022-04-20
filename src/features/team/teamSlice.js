@@ -8,6 +8,7 @@ const initialState = {
     listsOrder: [],
     /* usuarios que puedo añadir al Miembro */
     filteredUsers: [],
+    userRole: "",
     /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
     getTeamStatus: "",
     getTeamError: "",
@@ -29,15 +30,18 @@ export const getTeam = createAsyncThunk(
     async (idTeam, { rejectWithValue }) => {
         try {
             const response = await aGet("/teams/" + idTeam);
-            const membersId = response.data.members.map((member) => {
+            const membersId = response.data.team.members.map((member) => {
                 return member._id._id;
             });
             /* puedo enviarle un arreglo directo o debo enviar si o si un JSON */
             const response2 = await aPost("/teams/filteredUsers", {
                 membersId,
             });
-            return { ...response.data, filteredUsers: response2.data };
+            /* creo que esta desestructuracion esta demas */
+            const { team, userRole } = response.data;
+            return { ...team, filteredUsers: response2.data, userRole };
         } catch (error) {
+            console.log(error);
             console.log(error.response.data);
             /* mandamos como action.payload el error que nos retorna el backend */
             return rejectWithValue(error.response?.data);
@@ -233,8 +237,8 @@ export const deleteMember = createAsyncThunk(
 
 export const addTask = createAsyncThunk(
     "team/addTask",
-    async ({ idList, name }, { rejectWithValue }) => {
-        const data = { idList, name };
+    async ({ idList, name, author }, { rejectWithValue }) => {
+        const data = { idList, name, author };
         try {
             const response = await aPost(`/lists/${idList}/addTask`, data);
             return response.data;
@@ -299,8 +303,15 @@ const teamSlice = createSlice({
             };
         },
         [getTeam.fulfilled]: (state, action) => {
-            const { name, description, _id, img, idLeader, filteredUsers } =
-                action.payload;
+            const {
+                name,
+                description,
+                _id,
+                img,
+                idLeader,
+                filteredUsers,
+                userRole,
+            } = action.payload;
             const team = { name, description, _id, img, idLeader };
             const { members } = action.payload;
             const { lists } = action.payload;
@@ -312,6 +323,7 @@ const teamSlice = createSlice({
                 lists: lists,
                 listsOrder,
                 filteredUsers,
+                userRole,
                 /* dependiendo de si fue fulfilled o rejected, mostrara un mensaje */
                 getTeamStatus: "success",
                 getTeamError: "",
@@ -431,7 +443,7 @@ const teamSlice = createSlice({
             };
         },
         [updateListsOrder.fulfilled]: (state, action) => {
-            const lists = action.payload.lists;
+            const lists = action.payload.team.lists;
             const listsOrder = lists.map((list) => list._id);
             return {
                 ...state,

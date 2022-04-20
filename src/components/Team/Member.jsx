@@ -12,9 +12,11 @@ import {
     changeRole,
     deleteMember,
 } from "../../features/team/teamSlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 export default function AlignItemsList({ team, isFilteredUsers }) {
-    const PF = "http://localhost:4000";
+    const APIREST = process.env.REACT_APP_APIREST;
+    const teamState = useSelector((state) => state.team);
+    const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     let data;
     data = isFilteredUsers ? team.filteredUsers : team.members;
@@ -48,9 +50,9 @@ export default function AlignItemsList({ team, isFilteredUsers }) {
                                 alt=""
                                 src={
                                     el._id.img
-                                        ? PF + el._id.img
+                                        ? APIREST + el._id.img
                                         : el.img
-                                        ? PF + el.img
+                                        ? APIREST + el.img
                                         : ""
                                 }
                             />
@@ -62,14 +64,22 @@ export default function AlignItemsList({ team, isFilteredUsers }) {
                                     : el.name
                                     ? el.name
                                     : ""
-                            } ${el.role ? el.role.toUpperCase() : ""}`}
+                            } ${
+                                Number.isInteger(el.role)
+                                    ? ""
+                                    : el.role.toUpperCase()
+                            }`}
                             secondary={
                                 <React.Fragment>
                                     <Typography
                                         sx={{ display: "inline" }}
                                         component="span"
                                         variant="body2"
-                                        color="text.primary"
+                                        className={
+                                            el._id._id === auth.user.id
+                                                ? "text-[#0079bf]"
+                                                : "text-[black]"
+                                        }
                                     >
                                         {el._id.email
                                             ? el._id.email
@@ -79,27 +89,35 @@ export default function AlignItemsList({ team, isFilteredUsers }) {
                                     </Typography>
                                 </React.Fragment>
                             }
+                            className={
+                                el._id._id === auth.user.id
+                                    ? "text-[#0079bf]"
+                                    : "text-[black]"
+                            }
                         />
-                        <div className="flex items-center">
-                            {isFilteredUsers ? (
-                                <MenuMoreVertIcon
-                                    idTeam={team.team._id}
-                                    idNewMember={el._id}
-                                    name={el.name}
-                                    email={el.email}
-                                    img={el.img ? el.img : ""}
-                                    isFilteredUsers={isFilteredUsers}
-                                    addAMember={addAMember}
-                                />
-                            ) : (
-                                <MenuMoreVertIcon
-                                    idTeam={team.team._id}
-                                    idMember={el._id._id}
-                                    modifyRole={modifyRole}
-                                    removeMember={removeMember}
-                                />
-                            )}
-                        </div>
+                        {teamState.userRole === "leader" &&
+                        isFilteredUsers === false ? (
+                            <MenuMoreVertIcon
+                                idTeam={team.team._id}
+                                idMember={el._id._id}
+                                modifyRole={modifyRole}
+                                removeMember={removeMember}
+                                leader={true}
+                            />
+                        ) : teamState.userRole === "leader" &&
+                          isFilteredUsers === true ? (
+                            <MenuMoreVertIcon
+                                idTeam={team.team._id}
+                                idNewMember={el._id}
+                                name={el.name}
+                                email={el.email}
+                                img={el.img ? el.img : ""}
+                                isFilteredUsers={isFilteredUsers}
+                                addAMember={addAMember}
+                            />
+                        ) : (
+                            ""
+                        )}
                     </ListItem>
                     <Divider variant="inset" component="li" />
                 </div>

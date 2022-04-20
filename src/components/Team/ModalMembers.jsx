@@ -62,10 +62,7 @@ export default function TransitionsModal({ team, title, isFilteredUsers }) {
                                     isFilteredUsers={isFilteredUsers}
                                 />
                             ) : (
-                                <Member
-                                    team={team}
-                                    isFilteredUsers={isFilteredUsers}
-                                />
+                                <Member team={team} isFilteredUsers={false} />
                             )}
                         </div>
                     </div>

@@ -14,7 +14,7 @@ const Home = () => {
     const navigate = useNavigate();
 
     useEffect(() => {
-        if (auth.logged === false) navigate("/login");
+        if (auth.logged === false) navigate("/workflow-front");
     }, [auth]);
 
     useEffect(() => {

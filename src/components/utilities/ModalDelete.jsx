@@ -52,7 +52,10 @@ export default function TransitionsModal({
                     Eliminar
                 </Button>
             ) : (
-                <div className="flex items-center gap-1" onClick={handleOpen}>
+                <div
+                    className="flex items-center gap-1 cursor-pointer"
+                    onClick={handleOpen}
+                >
                     <img src={Delete} alt="" className="h-[14px] w-[14px]" />
                     <p className="text-[#ED6368] font-bold">Eliminar</p>
                 </div>

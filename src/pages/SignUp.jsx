@@ -14,14 +14,14 @@ import { Alert, CircularProgress } from "@mui/material";
 import { signUp } from "../features/auth/authSlice";
 
 export default function SignInSide() {
-    const PF = process.env.REACT_APP_PUBLIC_FOLDER;
+    const APIREST = process.env.REACT_APP_APIREST;
     const theme = createTheme();
     const auth = useSelector((state) => state.auth);
     const dispatch = useDispatch();
     const navigate = useNavigate();
     /* console.log(auth.logged); */
     useEffect(() => {
-        if (auth.logged) navigate("/workflow-front");
+        if (auth.logged) navigate("/teams");
     }, [auth]);
 
     /* Otra forma de registrarse sería hacer todo en el evento sign in / submit, es decir, agarrar recien los datos ya que probablemente son los finales y crearlo, pero la ventaja de que esten controlados es que puedo hacer validaciones */
@@ -72,7 +72,7 @@ export default function SignInSide() {
                     sm={4}
                     md={7}
                     sx={{
-                        backgroundImage: `url(https://workflow-347205.rj.r.appspot.com/files/kanban-project-management.jpg)`,
+                        backgroundImage: `url(${APIREST}/files/kanban-project-management.jpg)`,
                         backgroundRepeat: "no-repeat",
                         backgroundColor: (t) =>
                             t.palette.mode === "light"
@@ -188,7 +188,7 @@ export default function SignInSide() {
                                 color="primary"
                             >
                                 <Link
-                                    to={"/login"}
+                                    to={"/workflow-front"}
                                     style={{ textDecoration: "none" }}
                                 >
                                     Already have an account Login Now
