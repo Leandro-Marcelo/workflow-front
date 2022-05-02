@@ -1,14 +1,18 @@
 {
   "files": {
-    "main.css": "/workflow-front/static/css/main.0afe6999.css",
-    "main.js": "/workflow-front/static/js/main.3285a5fe.js",
+    "main.css": "/workflow-front/static/css/main.161793a7.css",
+    "main.js": "/workflow-front/static/js/main.a43fcb26.js",
     "static/media/teamImage.jpg": "/workflow-front/static/media/teamImage.036b9f610d8536e0c627.jpg",
+    "static/media/kanban.jpg": "/workflow-front/static/media/kanban.d25d1e9740d9914e6518.jpg",
+    "static/media/google.svg": "/workflow-front/static/media/google.1ddd0216ad235c98dcb66f351c794505.svg",
+    "static/media/Edit.svg": "/workflow-front/static/media/Edit.b97dfc2f582dcf6931ac3ab6fd409873.svg",
     "index.html": "/workflow-front/index.html",
-    "main.0afe6999.css.map": "/workflow-front/static/css/main.0afe6999.css.map",
-    "main.3285a5fe.js.map": "/workflow-front/static/js/main.3285a5fe.js.map"
+    "static/media/Delete.svg": "/workflow-front/static/media/Delete.4e2741c93e50b27986ba7c1029b1db0e.svg",
+    "main.161793a7.css.map": "/workflow-front/static/css/main.161793a7.css.map",
+    "main.a43fcb26.js.map": "/workflow-front/static/js/main.a43fcb26.js.map"
   },
   "entrypoints": [
-    "static/css/main.0afe6999.css",
-    "static/js/main.3285a5fe.js"
+    "static/css/main.161793a7.css",
+    "static/js/main.a43fcb26.js"
   ]
 }
